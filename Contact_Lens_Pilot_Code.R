@@ -1,4 +1,4 @@
-######install necessary libraries#####
+######install necessary packages and libraries#####
 install.packages("tidyverse")
 install.packages("rcompanion")
 install.packages("writexl")
@@ -71,69 +71,63 @@ devtools::install_github("selcukorkmaz/PubChemR")
 library(PubChemR)
 
 #######load targeted data files######
-#AG note: fix this so it's not based on indices
 ######upload manual integration data######
 CL_manual_integrations <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/20250128(Participants_Rows).csv", col_types = cols(.default = "c"))
-Creatine <- CL_manual_integrations %>% subset(select = c(1:3, 26)) #filter for columns with creatine
 Creatinine <- CL_manual_integrations %>% subset(select = c(1:3, 5))
-Choline <- CL_manual_integrations %>% subset(select = c(1:3, 11))
-Threonine <- CL_manual_integrations %>% subset(select = c(1:3, 29))
-Histidine <- CL_manual_integrations %>% subset(select = c(1:3, 32))
-Arginine <- CL_manual_integrations %>% subset(select = c(1:3, 36))
-Carnitine <- CL_manual_integrations %>% subset(select = c(1:3, 21))
 
 #C18 Positive#
 C18_Positive_Manual <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_C18Positive_20250128.csv", col_types = cols(.default = "c"))
-Cholined9_C18Pos <- C18_Positive_Manual %>% subset(select = c(1:4, 10))
+Cholined9_C18Pos <- C18_Positive_Manual %>% subset(select = c(1:4, 10)) #select columns corresponding to compound of interest and the istd
 Cholined9_C18Pos[,'Type'] = NA #formatting so later function works#
-Cholined9_C18Pos_reorder <- Cholined9_C18Pos[,c(1, 2, 6, 3, 4, 5)]
+Cholined9_C18Pos_reorder <- Cholined9_C18Pos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
 
 #C18 Negative#
 C18_Negative_Manual <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_C18Negative_20250128.csv", col_types = cols(.default = "c"))
-Myristicd27_C18Neg <- C18_Negative_Manual %>% subset(select = c(1:2, 9:10, 12))
+Myristicd27_C18Neg <- C18_Negative_Manual %>% subset(select = c(1:2, 9:10, 12)) #select columns corresponding to compound of interest and the istd
 Myristicd27_C18Neg[,'Type'] = NA #formatting so later function works#
-Myristicd27_C18Neg_reorder <- Myristicd27_C18Neg[,c(1, 2, 6, 3, 4, 5)]
+Myristicd27_C18Neg_reorder <- Myristicd27_C18Neg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
 
 #Hilic Positive#
 Hilic_Positive_Manual <-read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_HILICPos_20250128.csv", col_types = cols(.default = "c"))
-Cholined9_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 9:10, 26))
+Cholined9_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 9:10, 26)) #select columns corresponding to compound of interest and the istd
 Cholined9_HilicPos[,'Type'] = NA #formatting so later function works#
-Cholined9_HilicPos_reorder <- Cholined9_HilicPos[,c(1, 2, 6, 3, 4, 5)]
+Cholined9_HilicPos_reorder <- Cholined9_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
 
-MeHisd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 33:34, 26))
+MeHisd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 33:34, 26)) #reorder for consistency for later binding of the dfs
 MeHisd3_HilicPos[,'Type'] = NA #formatting so later function works#
 MeHisd3_HilicPos_reorder <- MeHisd3_HilicPos[,c(1, 2, 6, 3, 4, 5)]
 
-Carnd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 23:24, 26))
+Carnd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 23:24, 26)) #select columns corresponding to compound of interest and the istd
 Carnd3_HilicPos[,'Type'] = NA #formatting so later function works#
-Carnd3_HilicPos_reorder <- Carnd3_HilicPos[,c(1, 2, 6, 3, 4, 5)]
+Carnd3_HilicPos_reorder <- Carnd3_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
 
-GABAd6_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 31:32, 26))
+GABAd6_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 31:32, 26)) #select columns corresponding to compound of interest and the istd
 GABAd6_HilicPos[,'Type'] = NA #formatting so later function works#
-GABAd6_HilicPos_reorder <- GABAd6_HilicPos[,c(1, 2, 6, 3, 4, 5)]
+GABAd6_HilicPos_reorder <- GABAd6_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
 
-FTyr_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 19:20, 26))
+FTyr_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 19:20, 26)) #select columns corresponding to compound of interest and the istd
 FTyr_HilicPos[,'Type'] = NA #formatting so later function works#
-FTyr_HilicPos_reorder <- FTyr_HilicPos[,c(1, 2, 6, 3, 4, 5)]
+FTyr_HilicPos_reorder <- FTyr_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
 
 
 #Hilic Negative#
 Hilic_Negative_Manual <-read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_HILICNeg_20250128.csv", col_types = cols(.default = "c"))
-FTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 11:12, 4))
+FTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 11:12, 4))  #select columns corresponding to compound of interest and the istd
 FTyr_HilicNeg[,'Type'] = NA #formatting so later function works#
-FTyr_HilicNeg_reorder <- FTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)]
+FTyr_HilicNeg_reorder <- FTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
 
 
-ClTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 9:10, 4))
+ClTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 9:10, 4))  #select columns corresponding to compound of interest and the istd
 ClTyr_HilicNeg[,'Type'] = NA #formatting so later function works#
-ClTyr_HilicNeg_reorder <- ClTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)]
+ClTyr_HilicNeg_reorder <- ClTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
 
-FPhe_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 7:8, 4))
+FPhe_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 7:8, 4))  #select columns corresponding to compound of interest and the istd
 FPhe_HilicNeg[,'Type'] = NA #formatting so later function works#
-FPhe_HilicNeg_reorder <- FPhe_HilicNeg[,c(1, 2, 6, 3, 4, 5)]
+FPhe_HilicNeg_reorder <- FPhe_HilicNeg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
 
 ####functions for manual integration#####
-manual_integration_clean_no_istd <- function(df){ #write function for cleaning manual integrations#
+#multiple functions exist because renaming columns is in these butthe file names varied slightly across the exports from Agilent quant.
+manual_integration_clean_no_istd <- function(df){
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- df[1,] #set removed first row as column names
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
@@ -180,9 +174,9 @@ manual_integration_clean_no_istd <- function(df){ #write function for cleaning m
     mutate(Sample_Type = ifelse(grepl('Blank', Sample), 'Solvent Blank', Sample_Type)) %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-}
+} #write function for cleaning manual integrations#
 
-manual_integration_clean <- function(df){ #write function for cleaning manual integrations#
+manual_integration_clean <- function(df){
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- df[1,] #set removed first row as column names
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
@@ -232,7 +226,7 @@ manual_integration_clean <- function(df){ #write function for cleaning manual in
     mutate(Sample_Type = ifelse(grepl('Blank', Sample), 'Solvent Blank', Sample_Type)) %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-} #for if sample file has b.d#
+} #write function for cleaning manual integrations, for if sample file has b.d#
 
 manual_integration_blank_sub <- function(df){
   blanks <- df %>% filter(Sample_Type == 'Blank') %>%
@@ -248,7 +242,7 @@ manual_integration_blank_sub <- function(df){
   df <- merged_blank_filtered %>% subset(select = -c(Type.x, Type.y, Sample.y, Sample_Type.x, Sample_Type.y,
                                                      RT.x, RT.y, Name.x, Name.y, ISTD_Area.y, Area.y)) %>%
     dplyr::rename(ISTD_Area = ISTD_Area.x)
-}
+} #function for blank subtraction from manually integrated Agilent Quant data#
 
 manual_integration_lod_replace <- function(df){
   min_val = min(df$Blank_Subtracted)
@@ -256,9 +250,9 @@ manual_integration_lod_replace <- function(df){
   df <- df %>%
     mutate(Blank_Subtracted = ifelse(Blank_Subtracted ==0, LOD, Blank_Subtracted)) %>%
     mutate(Blank_Subtracted = ifelse(Blank_Subtracted <0, LOD, Blank_Subtracted))
-}
+} #function for replacing any zero or negative values after blank subtraction in Agilent Quant
 
-manual_integration_cleana <- function(df){ #write function for cleaning manual integrations#
+manual_integration_cleana <- function(df){
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- df[1,] #set removed first row as column names
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
@@ -309,9 +303,9 @@ manual_integration_cleana <- function(df){ #write function for cleaning manual i
     dplyr::rename(Type = 'NA') %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-}#if Sample file is a.d
+}#write function for cleaning manual integrations, for if sample file has a.d#
 
-manual_integration_cleanc <- function(df){ #write function for cleaning manual integrations#
+manual_integration_cleanc <- function(df){
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- df[1,] #set removed first row as column names
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
@@ -362,9 +356,9 @@ manual_integration_cleanc <- function(df){ #write function for cleaning manual i
     dplyr::rename(Type = 'NA') %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-}#if Sample file is c.d
+}#write function for cleaning manual integrations, for if sample file has c.d#
 
-manual_integration_clean_ <- function(df){ #write function for cleaning manual integrations with no suffix
+manual_integration_clean_ <- function(df){
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- df[1,] #set removed first row as column names
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
@@ -415,37 +409,16 @@ manual_integration_clean_ <- function(df){ #write function for cleaning manual i
     dplyr::rename(Type = 'NA') %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-}
+}#write function for cleaning manual integrations with no suffix
 
 ####clean manual integration dfs#####
 #clean each compound's df and add column for its name
-Creatine_Cleaned <- manual_integration_clean_no_istd(Creatine)
-Creatine_Cleaned[,'Analyte'] = 'Creatine'
-view(Creatine_Cleaned)
+
 Creatinine_Cleaned <- manual_integration_clean_no_istd(Creatinine)
 Creatinine_Cleaned[,'Analyte'] = 'Creatinine'
 
-Threonine_Cleaned <- manual_integration_clean_no_istd(Threonine)
-Threonine_Cleaned[,'Analyte'] = 'Threonine'
-
-#Threonine_Cleaned_Blank_Sub <- manual_integration_blank_sub(Threonine_Cleaned) %>% #nothing in df#
-# manual_integration_lod_replace()
-
-Histidine_Cleaned <- manual_integration_clean_no_istd(Histidine)
-Histidine_Cleaned[,'Analyte'] = 'Histidine'
-
-Arginine_Cleaned <- manual_integration_clean_no_istd(Arginine)
-Arginine_Cleaned[,'Analyte'] = 'Arginine'
-
-Carnitine_Cleaned <- manual_integration_clean_no_istd(Carnitine)
-Carnitine_Cleaned[,'Analyte'] = 'Carnitine'
-
-Choline_Cleaned <- manual_integration_clean_no_istd(Choline)
-Choline_Cleaned[,'Analyte'] = 'Choline'
-
 #bind individual compounds into one df
-#Manual_integration_clean_all <- rbind(Creatinine_Cleaned_Blank_Sub, Phenylalanine_Cleaned_Blank_Sub,Histidine_Cleaned_Blank_Sub, Arginine_Cleaned_Blank_Sub)
-Manual_integration_all_no_blank_sub <- rbind(Creatine_Cleaned, Creatinine_Cleaned, Choline_Cleaned, Carnitine_Cleaned, Threonine_Cleaned, Histidine_Cleaned, Arginine_Cleaned)
+Manual_integration_all_no_blank_sub <- rbind(Creatinine_Cleaned)
 ##adjust for istd##
 #get istds#
 Stearic_Acid <- Hilic_Negative_Manual %>% subset(select = c(2,4)) #select for stearic acid's peak area and sample
@@ -657,15 +630,14 @@ manual_integration_clean_no_filters <- function(df){ #write function for cleanin
 } #for if sample file has b.d#
 Hilic_Positive_Manual2 <- manual_integration_clean_no_filters(Hilic_Positive_Manual)
 
+# Loop through the columns starting from `start_col` and rename every other column as the istd signal
 start_col <- 3
 step <- 2
-# Loop through the columns starting from `start_col` and rename every other column
 for(i in seq(start_col, ncol(Hilic_Positive_Manual2), by = step)) {
   if (i > 1) {
     colnames(Hilic_Positive_Manual2)[i] <- paste0(colnames(Hilic_Positive_Manual2)[i - 1], "_istd")
   }
 }
-colnames(Hilic_Positive_Manual2)
 hilic_pos_tibble_list <- list()
 n_cols <- ncol(Hilic_Positive_Manual2)-2
 start <-2
@@ -1802,7 +1774,7 @@ var_name_P <- colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[,grep("P1", colname
 var_name_qcp <- colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[,grep("QCP", colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected))])
 var_name_qcb <- colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[,grep("QCB", colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected))])
 
-CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_P][CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_P]==0] <- NA #set any avalues in the previously defined columns that are equal 0 as NA. this is to get the LOD wihtout issue#
+CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_P][CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_P]==0] <- NA #set any values in the previously defined columns that are equal 0 as NA. this is to get the LOD wihtout issue#
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_qcp][CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_qcp]==0] <- NA
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_qcb][CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_qcb]==0] <- NA
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[, "LOD_pre_solv_sub"] <- apply(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[, which(colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected)=="P12_B_001"):which(colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected)=="QCP_002")], 1, min, na.rm = TRUE)/5 #get LOD for solvent subtraction
@@ -1822,7 +1794,6 @@ nrow(CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected)
 CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected$m.z_similarity = as.numeric(as.character(CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected$m.z_similarity)) #turn the m.z similarity column to numeric#
 
 #######get solv sub LOD#######
-##manually selecting columns :(
 Solv_Sub_LOD <- CLEAN_MERGED_ALL_WITH_DUPS1_Corrected %>%  #NAs are 0s
   subset(select = c(Type:Metabolite_name, m.z_similarity, Total_score, SMILES, INCHIKEY, P12_B_001:QCP_002, QC_Pooled_Avg:QC_Pool_Blank_Ratio)) %>%
   pivot_longer(names_to = 'Sample', values_to = 'ISTD_Corrected_Value', cols = c(P12_B_001:QCP_002)) %>%
@@ -1886,7 +1857,6 @@ GC_IDs_Combined  <- bind_rows(gc_inchikey_list) %>%
   ungroup() %>%
   dplyr::rename(Metabolite_name =Identifier)
 mz1_gc_subset <- mz1_gc1
-#write.csv(mz1_gc_subset, "/Users/anyaguo/Documents/Research/mz1_gc_subset.csv", row.names = FALSE)
 
 mz1_gc_inchikey_merge <- merge(mz1_gc_subset, GC_IDs_Combined, by = c('Metabolite_name'), all = T) %>%
   filter(!is.na(Average_Mz))
