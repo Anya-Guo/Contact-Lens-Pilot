@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-######install necessary packages and libraries#####
-=======
 ######install necessary libraries#####
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
 install.packages("tidyverse")
 install.packages("rcompanion")
 install.packages("writexl")
@@ -63,7 +59,6 @@ library(EnvStats)
 library(readr)
 library(ggvenn)
 library(ggVennDiagram)
-install.packages("readxl")
 library(readxl)
 library(plotly)
 
@@ -74,184 +69,61 @@ library(classyfireR)
 devtools::install_github("selcukorkmaz/PubChemR")
 library(PubChemR)
 
-#######load targeted data files######
-<<<<<<< HEAD
-######upload manual integration data######
-CL_manual_integrations <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/20250128(Participants_Rows).csv", col_types = cols(.default = "c"))
-Creatinine <- CL_manual_integrations %>% subset(select = c(1:3, 5))
-
+######1. Get internal standard and surrogate standard areas#######
+##upload manual integration data##
 #C18 Positive#
 C18_Positive_Manual <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_C18Positive_20250128.csv", col_types = cols(.default = "c"))
-Cholined9_C18Pos <- C18_Positive_Manual %>% subset(select = c(1:4, 10)) #select columns corresponding to compound of interest and the istd
+Cholined9_C18Pos <- C18_Positive_Manual %>% subset(select = c(1:4, 10)) #select columns containingsurrogate standard and internal standard
 Cholined9_C18Pos[,'Type'] = NA #formatting so later function works#
-Cholined9_C18Pos_reorder <- Cholined9_C18Pos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
+Cholined9_C18Pos_reorder <- Cholined9_C18Pos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
 #C18 Negative#
 C18_Negative_Manual <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_C18Negative_20250128.csv", col_types = cols(.default = "c"))
-Myristicd27_C18Neg <- C18_Negative_Manual %>% subset(select = c(1:2, 9:10, 12)) #select columns corresponding to compound of interest and the istd
+Myristicd27_C18Neg <- C18_Negative_Manual %>% subset(select = c(1:2, 9:10, 12)) #select columns containingsurrogate standard and internal standard
 Myristicd27_C18Neg[,'Type'] = NA #formatting so later function works#
-Myristicd27_C18Neg_reorder <- Myristicd27_C18Neg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
+Myristicd27_C18Neg_reorder <- Myristicd27_C18Neg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
 #Hilic Positive#
 Hilic_Positive_Manual <-read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_HILICPos_20250128.csv", col_types = cols(.default = "c"))
-Cholined9_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 9:10, 26)) #select columns corresponding to compound of interest and the istd
+Cholined9_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 9:10, 26)) #select columns containingsurrogate standard and internal standard
 Cholined9_HilicPos[,'Type'] = NA #formatting so later function works#
-Cholined9_HilicPos_reorder <- Cholined9_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
+Cholined9_HilicPos_reorder <- Cholined9_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
-MeHisd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 33:34, 26)) #reorder for consistency for later binding of the dfs
+MeHisd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 33:34, 26)) #select columns containingsurrogate standard and internal standard
 MeHisd3_HilicPos[,'Type'] = NA #formatting so later function works#
-MeHisd3_HilicPos_reorder <- MeHisd3_HilicPos[,c(1, 2, 6, 3, 4, 5)]
+MeHisd3_HilicPos_reorder <- MeHisd3_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
-Carnd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 23:24, 26)) #select columns corresponding to compound of interest and the istd
+Carnd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 23:24, 26)) #select columns containingsurrogate standard and internal standard
 Carnd3_HilicPos[,'Type'] = NA #formatting so later function works#
-Carnd3_HilicPos_reorder <- Carnd3_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
+Carnd3_HilicPos_reorder <- Carnd3_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
-GABAd6_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 31:32, 26)) #select columns corresponding to compound of interest and the istd
+GABAd6_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 31:32, 26)) #select columns containingsurrogate standard and internal standard
 GABAd6_HilicPos[,'Type'] = NA #formatting so later function works#
-GABAd6_HilicPos_reorder <- GABAd6_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
-
-FTyr_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 19:20, 26)) #select columns corresponding to compound of interest and the istd
-FTyr_HilicPos[,'Type'] = NA #formatting so later function works#
-FTyr_HilicPos_reorder <- FTyr_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
-=======
-#AG note: fix this so it's not based on indices
-######upload manual integration data######
-CL_manual_integrations <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/20250128(Participants_Rows).csv", col_types = cols(.default = "c"))
-Creatine <- CL_manual_integrations %>% subset(select = c(1:3, 26)) #filter for columns with creatine
-Creatinine <- CL_manual_integrations %>% subset(select = c(1:3, 5))
-Choline <- CL_manual_integrations %>% subset(select = c(1:3, 11))
-Threonine <- CL_manual_integrations %>% subset(select = c(1:3, 29))
-Histidine <- CL_manual_integrations %>% subset(select = c(1:3, 32))
-Arginine <- CL_manual_integrations %>% subset(select = c(1:3, 36))
-Carnitine <- CL_manual_integrations %>% subset(select = c(1:3, 21))
-
-#C18 Positive#
-C18_Positive_Manual <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_C18Positive_20250128.csv", col_types = cols(.default = "c"))
-Cholined9_C18Pos <- C18_Positive_Manual %>% subset(select = c(1:4, 10))
-Cholined9_C18Pos[,'Type'] = NA #formatting so later function works#
-Cholined9_C18Pos_reorder <- Cholined9_C18Pos[,c(1, 2, 6, 3, 4, 5)]
-
-#C18 Negative#
-C18_Negative_Manual <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_C18Negative_20250128.csv", col_types = cols(.default = "c"))
-Myristicd27_C18Neg <- C18_Negative_Manual %>% subset(select = c(1:2, 9:10, 12))
-Myristicd27_C18Neg[,'Type'] = NA #formatting so later function works#
-Myristicd27_C18Neg_reorder <- Myristicd27_C18Neg[,c(1, 2, 6, 3, 4, 5)]
-
-#Hilic Positive#
-Hilic_Positive_Manual <-read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_HILICPos_20250128.csv", col_types = cols(.default = "c"))
-Cholined9_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 9:10, 26))
-Cholined9_HilicPos[,'Type'] = NA #formatting so later function works#
-Cholined9_HilicPos_reorder <- Cholined9_HilicPos[,c(1, 2, 6, 3, 4, 5)]
-
-MeHisd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 33:34, 26))
-MeHisd3_HilicPos[,'Type'] = NA #formatting so later function works#
-MeHisd3_HilicPos_reorder <- MeHisd3_HilicPos[,c(1, 2, 6, 3, 4, 5)]
-
-Carnd3_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 23:24, 26))
-Carnd3_HilicPos[,'Type'] = NA #formatting so later function works#
-Carnd3_HilicPos_reorder <- Carnd3_HilicPos[,c(1, 2, 6, 3, 4, 5)]
-
-GABAd6_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 31:32, 26))
-GABAd6_HilicPos[,'Type'] = NA #formatting so later function works#
-GABAd6_HilicPos_reorder <- GABAd6_HilicPos[,c(1, 2, 6, 3, 4, 5)]
+GABAd6_HilicPos_reorder <- GABAd6_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
 FTyr_HilicPos <- Hilic_Positive_Manual %>% subset(select = c(1:2, 19:20, 26))
 FTyr_HilicPos[,'Type'] = NA #formatting so later function works#
-FTyr_HilicPos_reorder <- FTyr_HilicPos[,c(1, 2, 6, 3, 4, 5)]
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
+FTyr_HilicPos_reorder <- FTyr_HilicPos[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
 
 #Hilic Negative#
 Hilic_Negative_Manual <-read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Manual Integrations/ContactLensNontarget_Quant_HILICNeg_20250128.csv", col_types = cols(.default = "c"))
-<<<<<<< HEAD
-FTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 11:12, 4))  #select columns corresponding to compound of interest and the istd
+FTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 11:12, 4)) #select columns containingsurrogate standard and internal standard
 FTyr_HilicNeg[,'Type'] = NA #formatting so later function works#
-FTyr_HilicNeg_reorder <- FTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
+FTyr_HilicNeg_reorder <- FTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
 
-ClTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 9:10, 4))  #select columns corresponding to compound of interest and the istd
+ClTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 9:10, 4)) #select columns containingsurrogate standard and internal standard
 ClTyr_HilicNeg[,'Type'] = NA #formatting so later function works#
-ClTyr_HilicNeg_reorder <- ClTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
+ClTyr_HilicNeg_reorder <- ClTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
-FPhe_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 7:8, 4))  #select columns corresponding to compound of interest and the istd
+FPhe_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 7:8, 4)) #select columns containingsurrogate standard and internal standard
 FPhe_HilicNeg[,'Type'] = NA #formatting so later function works#
-FPhe_HilicNeg_reorder <- FPhe_HilicNeg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency for later binding of the dfs
+FPhe_HilicNeg_reorder <- FPhe_HilicNeg[,c(1, 2, 6, 3, 4, 5)] #reorder for consistency#
 
-####functions for manual integration#####
-#multiple functions exist because renaming columns is in these butthe file names varied slightly across the exports from Agilent quant.
-manual_integration_clean_no_istd <- function(df){
-=======
-FTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 11:12, 4))
-FTyr_HilicNeg[,'Type'] = NA #formatting so later function works#
-FTyr_HilicNeg_reorder <- FTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)]
-
-
-ClTyr_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 9:10, 4))
-ClTyr_HilicNeg[,'Type'] = NA #formatting so later function works#
-ClTyr_HilicNeg_reorder <- ClTyr_HilicNeg[,c(1, 2, 6, 3, 4, 5)]
-
-FPhe_HilicNeg <- Hilic_Negative_Manual %>% subset(select = c(1:2, 7:8, 4))
-FPhe_HilicNeg[,'Type'] = NA #formatting so later function works#
-FPhe_HilicNeg_reorder <- FPhe_HilicNeg[,c(1, 2, 6, 3, 4, 5)]
-
-####functions for manual integration#####
-manual_integration_clean_no_istd <- function(df){ #write function for cleaning manual integrations#
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
-  df_clean <- df[-c(1),] #remove first row
-  names(df_clean) <- df[1,] #set removed first row as column names
-  names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
-  df_clean <- df_clean %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_10b.d','P15_D1_001', Data_File)) %>% #rename samples to match other data frames#
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_11b.d','P15_D2_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_12b.d','P15_D3_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_13b.d','P16_B_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_14b.d','P16_D1_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_15b.d','P16_D2_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_16b.d','P16_D3_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_1b.d','P12_B_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_2b.d','P12_D1_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_3b.d','P12_D2_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_4b.d','P12_D3_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_5b.d','P14_B_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_1b.d','P12_B_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_6b.d','P14_D1_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_7b.d','P14_D2_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_8b.d','P14_D3_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_9b.d','P15_B_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_Blank_1_1b.d','Blank_1_1', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_Blank_1b.d','Blank_1', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_Blank_2_1b.d','Blank_2_1', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_Blank_2b.d','Blank_2', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_QC-Blank_1b.d','QCB_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_QC-Blankb.d','QCB_002', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_QC-Pooled_2b.d','QCP_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_QC-Pooledb.d','QCP_002', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_Spike_Blank-1b.d','Spk1_001', Data_File)) %>%
-    mutate(Data_File = ifelse(Data_File =='JOQT31508_Spike_Blank-2b.d','Spk2_002', Data_File)) %>%
-    dplyr::rename(Sample = Data_File)
-  df_clean$Area <- as.numeric(df_clean$Area)
-  df_clean[,'Participant_Number'] = NA
-  df_clean[,'Sample_Type'] = NA
-  df <- df_clean %>% mutate(Participant_Number = ifelse(grepl('P12', Sample), '12', Participant_Number)) %>% #assign participant numbers
-    mutate(Participant_Number = ifelse(grepl('P14', Sample), '14', Participant_Number)) %>%
-    mutate(Participant_Number = ifelse(grepl('P15', Sample), '15', Participant_Number)) %>%
-    mutate(Participant_Number = ifelse(grepl('P16', Sample), '16', Participant_Number)) %>%
-    mutate(Sample_Type = ifelse(grepl('_B_', Sample), 'Blank', Sample_Type)) %>% #assign sample type
-    mutate(Sample_Type = ifelse(grepl('_D', Sample), 'Sample', Sample_Type)) %>%
-    mutate(Sample_Type = ifelse(grepl('QCB', Sample), 'QC Blank', Sample_Type)) %>%
-    mutate(Sample_Type = ifelse(grepl('QCP', Sample), 'QC Pooled', Sample_Type)) %>%
-    mutate(Sample_Type = ifelse(grepl('Blank', Sample), 'Solvent Blank', Sample_Type)) %>%
-    mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
-  df
-<<<<<<< HEAD
-} #write function for cleaning manual integrations#
+#functions for manual integrations of internal and surrogate standards#
 
 manual_integration_clean <- function(df){
-=======
-}
-
-manual_integration_clean <- function(df){ #write function for cleaning manual integrations#
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- df[1,] #set removed first row as column names
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
@@ -301,47 +173,9 @@ manual_integration_clean <- function(df){ #write function for cleaning manual in
     mutate(Sample_Type = ifelse(grepl('Blank', Sample), 'Solvent Blank', Sample_Type)) %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-<<<<<<< HEAD
 } #write function for cleaning manual integrations, for if sample file has b.d#
-=======
-} #for if sample file has b.d#
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
-
-manual_integration_blank_sub <- function(df){
-  blanks <- df %>% filter(Sample_Type == 'Blank') %>%
-    dplyr::rename(Blank_Area = ISTD_Normalized_Area)
-  samples <- df %>% filter(Sample_Type == 'Sample') %>%
-    dplyr::rename(Sample_Area = ISTD_Normalized_Area)
-  merged <- merge(samples, blanks, by = c('Participant_Number')) %>%
-    filter(!is.na(RT.x) & !is.na(RT.y)) %>%
-    dplyr::rename(Sample = Sample.x)
-  merged[,'Blank_Sample_Ratio'] = merged$Blank_Area/merged$Sample_Area
-  merged[,'Blank_Subtracted'] = merged$Sample_Area-merged$Blank_Area
-  merged_blank_filtered <- merged %>% filter(Blank_Sample_Ratio<0.35)
-  df <- merged_blank_filtered %>% subset(select = -c(Type.x, Type.y, Sample.y, Sample_Type.x, Sample_Type.y,
-                                                     RT.x, RT.y, Name.x, Name.y, ISTD_Area.y, Area.y)) %>%
-    dplyr::rename(ISTD_Area = ISTD_Area.x)
-<<<<<<< HEAD
-} #function for blank subtraction from manually integrated Agilent Quant data#
-=======
-}
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
-
-manual_integration_lod_replace <- function(df){
-  min_val = min(df$Blank_Subtracted)
-  LOD = min_val/5
-  df <- df %>%
-    mutate(Blank_Subtracted = ifelse(Blank_Subtracted ==0, LOD, Blank_Subtracted)) %>%
-    mutate(Blank_Subtracted = ifelse(Blank_Subtracted <0, LOD, Blank_Subtracted))
-<<<<<<< HEAD
-} #function for replacing any zero or negative values after blank subtraction in Agilent Quant
 
 manual_integration_cleana <- function(df){
-=======
-}
-
-manual_integration_cleana <- function(df){ #write function for cleaning manual integrations#
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- df[1,] #set removed first row as column names
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
@@ -392,15 +226,9 @@ manual_integration_cleana <- function(df){ #write function for cleaning manual i
     dplyr::rename(Type = 'NA') %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-<<<<<<< HEAD
-}#write function for cleaning manual integrations, for if sample file has a.d#
+} #write function for cleaning manual integrations, for if sample file has a.d#
 
 manual_integration_cleanc <- function(df){
-=======
-}#if Sample file is a.d
-
-manual_integration_cleanc <- function(df){ #write function for cleaning manual integrations#
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- df[1,] #set removed first row as column names
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
@@ -451,15 +279,9 @@ manual_integration_cleanc <- function(df){ #write function for cleaning manual i
     dplyr::rename(Type = 'NA') %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-<<<<<<< HEAD
-}#write function for cleaning manual integrations, for if sample file has c.d#
-
-manual_integration_clean_ <- function(df){
-=======
-}#if Sample file is c.d
+} #write function for cleaning manual integrations, for if sample file has c.d#
 
 manual_integration_clean_ <- function(df){ #write function for cleaning manual integrations with no suffix
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- df[1,] #set removed first row as column names
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
@@ -510,51 +332,9 @@ manual_integration_clean_ <- function(df){ #write function for cleaning manual i
     dplyr::rename(Type = 'NA') %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-<<<<<<< HEAD
-}#write function for cleaning manual integrations with no suffix
+} #write function for cleaning manual integrations, for if sample file has no suffix#
 
-####clean manual integration dfs#####
-#clean each compound's df and add column for its name
-
-Creatinine_Cleaned <- manual_integration_clean_no_istd(Creatinine)
-Creatinine_Cleaned[,'Analyte'] = 'Creatinine'
-
-#bind individual compounds into one df
-Manual_integration_all_no_blank_sub <- rbind(Creatinine_Cleaned)
-=======
-}
-
-####clean manual integration dfs#####
-#clean each compound's df and add column for its name
-Creatine_Cleaned <- manual_integration_clean_no_istd(Creatine)
-Creatine_Cleaned[,'Analyte'] = 'Creatine'
-view(Creatine_Cleaned)
-Creatinine_Cleaned <- manual_integration_clean_no_istd(Creatinine)
-Creatinine_Cleaned[,'Analyte'] = 'Creatinine'
-
-Threonine_Cleaned <- manual_integration_clean_no_istd(Threonine)
-Threonine_Cleaned[,'Analyte'] = 'Threonine'
-
-#Threonine_Cleaned_Blank_Sub <- manual_integration_blank_sub(Threonine_Cleaned) %>% #nothing in df#
-# manual_integration_lod_replace()
-
-Histidine_Cleaned <- manual_integration_clean_no_istd(Histidine)
-Histidine_Cleaned[,'Analyte'] = 'Histidine'
-
-Arginine_Cleaned <- manual_integration_clean_no_istd(Arginine)
-Arginine_Cleaned[,'Analyte'] = 'Arginine'
-
-Carnitine_Cleaned <- manual_integration_clean_no_istd(Carnitine)
-Carnitine_Cleaned[,'Analyte'] = 'Carnitine'
-
-Choline_Cleaned <- manual_integration_clean_no_istd(Choline)
-Choline_Cleaned[,'Analyte'] = 'Choline'
-
-#bind individual compounds into one df
-#Manual_integration_clean_all <- rbind(Creatinine_Cleaned_Blank_Sub, Phenylalanine_Cleaned_Blank_Sub,Histidine_Cleaned_Blank_Sub, Arginine_Cleaned_Blank_Sub)
-Manual_integration_all_no_blank_sub <- rbind(Creatine_Cleaned, Creatinine_Cleaned, Choline_Cleaned, Carnitine_Cleaned, Threonine_Cleaned, Histidine_Cleaned, Arginine_Cleaned)
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
-##adjust for istd##
+#clean manual integration dfs#
 #get istds#
 Stearic_Acid <- Hilic_Negative_Manual %>% subset(select = c(2,4)) #select for stearic acid's peak area and sample
 Stearic_Acid2 <- Stearic_Acid[-c(1),] #remove first row
@@ -711,10 +491,10 @@ Creatine_d3_Clean_C18[,'Type'] = 'C18_Positive'
 All_ISTDs <- rbind(Creatine_d3_Clean_C18, Creatine_d3_Clean_Hilic, Stearic_Acid_Clean_C18, Stearic_Acid_Clean_Hilic_neg) %>% #bind istds together for later use
   filter(Sample != 'Blank_1' & Sample != 'Blank_2' & Sample != 'Blank_2_1' & Sample != 'Blank_1_1') #filter out blanks without istd
 
-######get all hilic positive recoveries######
+##get all hilic positive recoveries##
 
-#rename every istd column to the sampel name + istd#
-manual_integration_clean_no_filters <- function(df){ #write function for cleaning manual integrations#
+#rename every istd column to the sample name + istd#
+manual_integration_clean_no_filters <- function(df){
   df_clean <- df[-c(1),] #remove first row
   names(df_clean) <- gsub(" ", "_", names(df_clean))#replace spaces in column names with underscore#
   names(df_clean) <- gsub("-", "!", names(df_clean))#replace spaces in column names with underscore#
@@ -762,27 +542,18 @@ manual_integration_clean_no_filters <- function(df){ #write function for cleanin
     mutate(Sample_Type = ifelse(grepl('Blank', Sample), 'Solvent Blank', Sample_Type)) %>%
     mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Spike Blank', Sample_Type))
   df
-} #for if sample file has b.d#
+} #for if sample file has b.d, #write function for cleaning manual integrations#
 Hilic_Positive_Manual2 <- manual_integration_clean_no_filters(Hilic_Positive_Manual)
 
-<<<<<<< HEAD
-# Loop through the columns starting from `start_col` and rename every other column as the istd signal
-start_col <- 3
-step <- 2
-=======
 start_col <- 3
 step <- 2
 # Loop through the columns starting from `start_col` and rename every other column
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
 for(i in seq(start_col, ncol(Hilic_Positive_Manual2), by = step)) {
   if (i > 1) {
     colnames(Hilic_Positive_Manual2)[i] <- paste0(colnames(Hilic_Positive_Manual2)[i - 1], "_istd")
   }
 }
-<<<<<<< HEAD
-=======
 colnames(Hilic_Positive_Manual2)
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
 hilic_pos_tibble_list <- list()
 n_cols <- ncol(Hilic_Positive_Manual2)-2
 start <-2
@@ -792,7 +563,7 @@ start <-2
 rename_by_pos = function(df, index, new_name){
   colnames(df)[index] = new_name
   df
-}
+} #function to rename columns based on their index
 
 for(i in seq(start, n_cols, by = 2)){
   if (i + 1 <= n_cols) {
@@ -812,9 +583,7 @@ for(i in seq(start, n_cols, by = 2)){
 HILIC_Pos_long <- bind_rows(hilic_pos_tibble_list)%>%
   dplyr::rename(Sample_Type = Participant_Number_istd)
 
-unique(HILIC_Pos_long$Compound) #get list of compounds
-
-HILIC_Pos_Surrogates <- HILIC_Pos_long %>%
+HILIC_Pos_Surrogates <- HILIC_Pos_long %>% #filter for surrogate standards
   filter(Compound == 'TMAO!d9' | Compound == 'Choline!d9'|
            Compound == 'F!Phe' | Compound == 'F!Tyr' | Compound == 'Carnitine!d3' |
            Compound == 'GABA!d6' | Compound == 'MeHis!d3' | Compound == 'His!15N') %>%
@@ -824,13 +593,12 @@ HILIC_Pos_Surrogates <- HILIC_Pos_long %>%
 
 
 HILIC_Pos_ISTD <- HILIC_Pos_long %>%
-  filter(Compound == 'Creatine!d3') %>%
+  filter(Compound == 'Creatine!d3') %>% #filter for internal standards
   subset(select = -c(Retention_Time)) %>%
   dplyr::rename(ISTD = Compound) %>%
   dplyr::rename(ISTD_Area = Area)
 
-
-HILIC_Pos_SSTD_ISTD_Merge <- merge(HILIC_Pos_Surrogates, HILIC_Pos_ISTD, by = c('Sample', 'Participant_Number','Sample_Type'))
+HILIC_Pos_SSTD_ISTD_Merge <- merge(HILIC_Pos_Surrogates, HILIC_Pos_ISTD, by = c('Sample', 'Participant_Number','Sample_Type')) #merge so surrogate is in one column and internal is in the next
 nrow(HILIC_Pos_Surrogates)-nrow(HILIC_Pos_SSTD_ISTD_Merge)
 
 HILIC_Pos_SSTD_ISTD_Merge$Surrogate_Area <- as.numeric(HILIC_Pos_SSTD_ISTD_Merge$Surrogate_Area)
@@ -838,12 +606,12 @@ HILIC_Pos_SSTD_ISTD_Merge$ISTD_Area <- as.numeric(HILIC_Pos_SSTD_ISTD_Merge$ISTD
 
 HILIC_Pos_SSTD_ISTD_Merge[,'ISTD_Corrected_Area'] = HILIC_Pos_SSTD_ISTD_Merge$Surrogate_Area/HILIC_Pos_SSTD_ISTD_Merge$ISTD_Area
 
-#get ideal ratio
+#get ideal ratio between surrogate and internal standard
 HILIC_Pos_Ideal_Ratio <- HILIC_Pos_SSTD_ISTD_Merge %>% filter(Sample_Type == 'Spike Blank') %>%
   group_by(Surrogate) %>%
   dplyr::summarise(Mean_Spike_Ratio= mean(ISTD_Corrected_Area))
 
-#get recoveries
+##get recoveries for most representative surrogate from each method##
 HILIC_Pos_Samle_Ratios <-
   HILIC_Pos_SSTD_ISTD_Merge %>% filter(Sample_Type == 'Blank' | Sample_Type == 'Sample' | Sample_Type == 'QC Pooled' | Sample_Type == 'QC Blank')
 
@@ -858,29 +626,6 @@ HILIC_Pos_Recovery_Stats <- HILIC_Pos_Recovery %>%
   ungroup()
 HILIC_Pos_Recovery_Stats[,'RSD'] = HILIC_Pos_Recovery_Stats$sd_Recovery*100/HILIC_Pos_Recovery_Stats$Mean_Recovery
 
-
-HILIC_Recovery_Plot <- HILIC_Pos_Recovery_Stats %>%
-  filter(Surrogate!='TMAO-d9' & Surrogate != 'F-Phe') %>% #exclude surrogates not analyzed well with method
-  mutate(Surrogate = str_replace(Surrogate, "!", "-")) %>% #replace ! with -
-  # mutate(Metabolite_name = sapply(Metabolite_name, function(x) paste(strwrap(x, 5), collapse = "\n"))) %>%
-  ggplot(aes(x = Surrogate, y = Mean_Recovery)) +  ##indicates x and y axes, fill indicates to split bars by subgroup and to create a legend
-  geom_bar(stat = "identity", fill = '#E41A1C', position = position_dodge(), width = 0.7, alpha = 0.4) + ##describes column spacing etc
-  labs(x = "Surrogate Standard",
-       y = "Recovery (%)") +
-  geom_hline(yintercept = 70, linetype = 'dashed')+
-  geom_hline(yintercept = 120, linetype = 'dashed')+
-  theme_classic()+
-  theme(axis.title.x = element_text(size = 20),axis.text.x=element_text(size=20),
-        axis.text.y=element_text(size=20), axis.title.y=element_text(size=20), legend.text=element_text(size=20),
-        legend.title=element_text(size=20))+
-  scale_fill_brewer(palette = 'Set1')+
-  #scale_colour_brewer(palette = 'Set1')+
-  # scale_fill_manual(values = c('#E41A1C'))+
-  geom_errorbar(aes(ymin = Mean_Recovery - sd_Recovery, ymax = Mean_Recovery + sd_Recovery),width = 0.2,position = position_dodge(0.7))
-HILIC_Recovery_Plot
-
-
-######bind blank subtracted analytes with their istd for day to day variation#####
 istd_manual_integration <- merge(Manual_integration_all_no_blank_sub, Stearic_Acid_Clean_Hilic_neg2, by = c('Sample'), all =TRUE) %>%
   mutate(Area = ifelse(is.na(Area), '0', Area)) #replace non detects with 0
 
@@ -889,7 +634,6 @@ istd_manual_integration$ISTD_Area <- as.numeric(istd_manual_integration$ISTD_Are
 
 istd_manual_integration[,'ISTD_Normalized_Area'] = istd_manual_integration$Area/istd_manual_integration$ISTD_Area
 
-####Surrogates###
 #bind into one data frame for calculations#
 #C18 Negative
 Myristicd27_C18Neg_Clean <- manual_integration_cleana(Myristicd27_C18Neg_reorder)
@@ -927,7 +671,6 @@ FTyr_HilicPos_Clean <- manual_integration_clean(FTyr_HilicPos_reorder) %>%
 FTyr_HilicPos_Clean[,'Compound'] = 'F-Tyr'
 FTyr_HilicPos_Clean[,'Method_Type'] = 'Hilic_Positive'
 
-
 #Hilic Negative
 FTyr_HilicNeg_Clean <- manual_integration_cleanc(FTyr_HilicNeg_reorder)
 FTyr_HilicNeg_Clean[,'Compound'] = 'F-Tyr'
@@ -944,7 +687,7 @@ HilicNeg_Manual_SS_All[,'Method_Type'] = 'Hilic_Negative'
 #bind all together#
 SS_All <- rbind(FTyr_HilicPos_Clean, HilicNeg_Manual_SS_All, Cholined9_HilicPos_Clean, Cholined9_C18Pos_Clean, Myristicd27_C18Neg_Clean, MeHisd3_HilicPos_Clean, GABAd6_HilicPos_Clean, Carnd3_HilicPos_Clean)
 
-#######get ideal SS:ISTD ratios########
+#get ideal SS:ISTD ratios#
 Spike_Blank_Stats <- SS_All %>% filter(Sample_Type == 'Spike Blank') %>% group_by(Compound, Method_Type) %>% get_summary_stats(ISTD_Normalized_Area, type = 'common')
 
 SS_Samples <- SS_All %>% filter(Sample_Type != 'Spike Blank' & Sample_Type != 'Solvent Blank') #filter out things without recovery
@@ -954,92 +697,27 @@ SS_Sample_Calculations <- merge(SS_Samples, Spike_Blank_Stats, by = c('Method_Ty
   filter(Method_Type != 'HILIC_Negative' | Compound == 'F-Phe') %>%
   subset(select = -c(n, sd, se, ci, iqr, median, max, min, n, variable))
 
-#######calculate percent recovery#####
+#calculate percent recovery#
 SS_Sample_Calculations[,'Percent_Recovery'] = SS_Sample_Calculations$ISTD_Normalized_Area*100/SS_Sample_Calculations$Ideal_SS
 
 #get average percent recovery#
 Percent_Recovery_Stats <- SS_Sample_Calculations %>%
   group_by(Compound, Method_Type) %>% get_summary_stats(Percent_Recovery, type = 'common')
 Percent_Recovery_Stats[,'RSD'] = Percent_Recovery_Stats$sd*100/Percent_Recovery_Stats$mean
-write.csv(Percent_Recovery_Stats,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/SI_Other_Data_Sets/LC_Recoveries.csv", row.names=FALSE) #export final data frame#
+#write.csv(Percent_Recovery_Stats,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/SI_Other_Data_Sets/LC_Recoveries.csv", row.names=FALSE) #export final data frame#
 
-#####recovery corrected targeted data#####
+##get recovery statistics##
 Percent_Recoveries <- SS_Sample_Calculations %>% subset(select = c(Method_Type, Compound, Sample, Percent_Recovery, Participant_Number, Sample_Type)) %>%
   dplyr::rename(SS_Compound = Compound)
 
 Hilic_Neg_recovery <- Percent_Recoveries %>%filter(SS_Compound == 'F-Phe')
 
-#merge percent recoveries with analyte areas in the same row for recovery correction
-Manual_Integration_recovery_correction <- merge(istd_manual_integration, Hilic_Neg_recovery, by = c('Sample', 'Participant_Number', 'Sample_Type'), all = TRUE) %>%
-  filter(!is.na(ISTD_Area) & !is.na(Percent_Recovery))
-Manual_Integration_recovery_correction[,'Recovery_Corrected'] = Manual_Integration_recovery_correction$ISTD_Normalized_Area/(Manual_Integration_recovery_correction$Percent_Recovery/100)
-
-#filter blanks into separate dfs
-Manual_Integration_Blanks <-Manual_Integration_recovery_correction %>% filter(Sample_Type == 'Blank') %>%
-  subset(select = c(Participant_Number, Analyte, Percent_Recovery, Recovery_Corrected)) #remove unneeded columnst o clean
-
-#filter samples into separate df
-Manual_Integration_Samples <- Manual_Integration_recovery_correction %>% filter(Sample_Type == 'Sample')
-
-#merge blanks with samples in the same row for analysis
-Manual_Integration_Samples_Blanks_Merged <- merge(Manual_Integration_Samples, Manual_Integration_Blanks, by = c('Participant_Number', 'Analyte'), all = TRUE) %>%
-  filter(!is.na(Method_Type)) %>% #filter out unmatched rows
-  filter(!is.na(Percent_Recovery.y)) %>% #filter out unmatched rows
-  dplyr::rename(Sample_Percent_Recovery = Percent_Recovery.x) %>%
-  dplyr::rename(Sample_Recovery_Corrected = Recovery_Corrected.x) %>%
-  dplyr::rename(Blank_Recovery_Corrected = Recovery_Corrected.y) %>%
-  mutate(Sample_Recovery_Corrected = ifelse(is.na(Sample_Recovery_Corrected), 0, Sample_Recovery_Corrected)) %>% #turn NAs to 0
-  mutate(Blank_Recovery_Corrected = ifelse(is.na(Blank_Recovery_Corrected), 0, Blank_Recovery_Corrected))
-
-#blank subtract
-Manual_Integration_Samples_Blanks_Merged[,'Blank_Sub'] = Manual_Integration_Samples_Blanks_Merged$Sample_Recovery_Corrected-Manual_Integration_Samples_Blanks_Merged$Blank_Recovery_Corrected
-Manual_Integration_Samples_Blanks_Merged[,'Blank_ratio'] = Manual_Integration_Samples_Blanks_Merged$Blank_Recovery_Corrected/Manual_Integration_Samples_Blanks_Merged$Sample_Recovery_Corrected #NaNs produced are Inf
-
-#pivot
-
-Manual_Int_Wide <- Manual_Integration_Samples_Blanks_Merged %>%
-  filter(Blank_ratio < 0.35) %>% #filter out high blanks
-  subset(select = c(Sample, Blank_Sub, Analyte)) %>%
-  pivot_wider(names_from = Sample, values_from = Blank_Sub)
-
-#get LOD and percent detection
-colnames(Manual_Int_Wide)
-Manual_Int_Wide[,'LOD'] <- (apply(Manual_Int_Wide[,which(colnames(Manual_Int_Wide) == 'P14_D3_001'):which(colnames(Manual_Int_Wide) == 'P16_D1_001')], 1, min, na.rm = TRUE))/5
-
-Manual_Int_Wide[,'Detection_Count'] = NA
-Manual_Int_Wide[,'P12_D3_001'] = NA #were filtered out but want to include in percent detection
-Manual_Int_Wide[,'P12_D1_001'] = NA
-Manual_Int_Wide[,'P12_D2_001'] = NA
-
-#get percent detection
-Manual_Int_Wide <- Manual_Int_Wide %>% mutate(Detection_Count = rowSums(!is.na(.[grepl('_D', colnames(.))]))) #change the value in detection count to the number of columns not equal to NA#
-number_samples_manual = sum(grepl(paste0("_D"),names(Manual_Int_Wide))) #count number of deployed samples in total#
-Manual_Int_Wide[,'Percent_Detection'] = Manual_Int_Wide$Detection_Count*100/number_samples_manual
-
-#pivot long for analysis#
-Manual_Int_Long <- Manual_Int_Wide %>% pivot_longer(values_to = 'Corrected_Area', cols = starts_with("P1"), names_to = 'Sample')
-Manual_Int_Long[,'Participant_Number'] = NA
-Manual_Int_Long[,'Day'] = NA
-
-#add categorical columns#
-Manual_Int_Long <-Manual_Int_Long %>%
-  mutate(Participant_Number = ifelse(grepl('P12', Sample), '12', Participant_Number)) %>% #assign participant numbers
-  mutate(Participant_Number = ifelse(grepl('P14', Sample), '14', Participant_Number)) %>%
-  mutate(Participant_Number = ifelse(grepl('P15', Sample), '15', Participant_Number)) %>%
-  mutate(Participant_Number = ifelse(grepl('P16', Sample), '16', Participant_Number)) %>%
-  mutate(Participant_Number = ifelse(grepl('P16', Sample), '16', Participant_Number)) %>%
-  mutate(Day = ifelse(grepl('D1', Sample), '1', Day)) %>%
-  mutate(Day = ifelse(grepl('D2', Sample), '2', Day)) %>%
-  mutate(Day = ifelse(grepl('D3', Sample), '3', Day)) %>%
-  mutate(Corrected_Area = ifelse(is.na(Corrected_Area), LOD, Corrected_Area)) %>% # change NAs and 0s to LOD
-  mutate(Corrected_Area = ifelse(Corrected_Area == 0 , LOD, Corrected_Area))
-
-######load targeted EI######
+#load targeted EI from tracefinder#
 CL_EI_manual_integrations <- read_csv('/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Manuscript/Targeted_GCEI_WornParticipantSamples_AllSamples_RawData(All Samples).csv', col_types = cols(.default = "c"))
-#goal here is to match the structure of the LC istd data#
 
 CL_EI_manual_integrations[,'Type'] = 'EI'
 
+#filter for internal standard
 Fluoranthene <- CL_EI_manual_integrations %>% filter(Compound == 'Fluoranthene-d10') %>%
   subset(select = c(Compound, Area, Filename, Type)) %>%
   filter(Filename!='P16_D2_001' & Filename != 'P14_D3_002' & Filename != 'Blk_001' & Filename != 'SolventBlank_001' & Filename != 'SolventBlank_002') %>% #filter out solvent blanks and samples that didn't inject
@@ -1050,9 +728,9 @@ Fluoranthene <- CL_EI_manual_integrations %>% filter(Compound == 'Fluoranthene-d
   mutate(Sample = ifelse(Sample == 'QCP_001', 'QCP_002', Sample)) %>%
   mutate(Sample = ifelse(Sample == 'Spk2_001', 'Spk2_002', Sample))
 
+#merge GC internal standard with LC ones
 All_ISTDs_with_EI <- rbind(All_ISTDs,Fluoranthene)
 
-#filter for blanks
 CL_EI_manual_integrations[,'Sample_Type'] = NA
 CL_EI_manual_integrations[,'Participant_Number'] = NA
 CL_EI_manual_integrations[,'Day'] = NA
@@ -1064,15 +742,15 @@ CL_EI_manual_integrations2 <- CL_EI_manual_integrations %>%
   mutate(Sample_Type = ifelse(grepl('_B_', Sample), 'Blank', Sample_Type)) %>% #label samples as blank vs sample
   mutate(Sample_Type = ifelse(grepl('_D', Sample), 'Sample', Sample_Type)) %>%
   mutate(Sample_Type = ifelse(grepl('Spk', Sample), 'Method_Blank', Sample_Type)) %>%
-  mutate(Participant_Number = ifelse(grepl('P12', Sample), '12', Participant_Number)) %>% #label samples with participant nu,ber
+  mutate(Participant_Number = ifelse(grepl('P12', Sample), '12', Participant_Number)) %>% #label samples with participant number
   mutate(Participant_Number = ifelse(grepl('P14', Sample), '14', Participant_Number)) %>%
   mutate(Participant_Number = ifelse(grepl('P15', Sample), '15', Participant_Number)) %>%
   mutate(Participant_Number = ifelse(grepl('P16', Sample), '16', Participant_Number)) %>%
   mutate(Day = ifelse(grepl('D1', Sample), '1', Day)) %>%
   mutate(Day = ifelse(grepl('D2', Sample), '2', Day)) %>%
   mutate(Day = ifelse(grepl('D3', Sample), '3', Day)) %>%
-  filter(!is.na(Sample_Type)) %>%#there is a random Blk_001 sample to filter out?
-  filter(Compound != 'FBDE 100 (2)') %>%
+  filter(!is.na(Sample_Type)) %>%#
+  filter(Compound != 'FBDE 100 (2)') %>% #remove duplicated analyte
   filter(Sample != 'P14_D3_002') %>% #filter out a rerun
   filter(Sample != 'P16_D2_001') #filter out failed injection
 CL_EI_manual_integrations2$Area <- as.numeric(CL_EI_manual_integrations2$Area) #changes all N/Fs to NAs
@@ -1084,17 +762,17 @@ CL_EI_manual_integrations2[,'ISTD_Normalized_Area'] = CL_EI_manual_integrations2
 CL_EI_manual_MBs <- CL_EI_manual_integrations2 %>% filter(Sample_Type == 'Method_Blank') %>% #filter for method blanks and get ideal recoveries for surrogates
   filter(Compound == 'Tris(2-chloroethyl) phosphate-d12' | Compound == 'Triphenyl phosphate-13C18' | Compound == 'Triethyl phosphate-d15 (TEP-d15)' | Compound == 'Pentabromobenzene-13C6'|
            Compound == 'Hexabromobenzene-13C6' | Compound == 'FBDE 208' | Compound == 'FBDE 157' | Compound == 'FBDE 100' | Compound == 'Di-n-butyl phthalate - d4' |
-           Compound == 'Diethyl phthalate-d4' | Compound == 'Bis(2- ethylhexyl) phthalate-d4') %>%
+           Compound == 'Diethyl phthalate-d4' | Compound == 'Bis(2- ethylhexyl) phthalate-d4') %>% #filter for surrogate standards
   mutate(ISTD_Normalized_Area = ifelse(is.na(ISTD_Normalized_Area), 0, ISTD_Normalized_Area)) %>%#NAs were things that weren't found in the sample. turn to 0
   group_by(Compound) %>%
-  dplyr::summarise(Ideal_ratio = mean(ISTD_Normalized_Area)) %>%
+  dplyr::summarise(Ideal_ratio = mean(ISTD_Normalized_Area)) %>% #get the ideal ratio from means of method blanks for each surrogate
   subset(select = c(Compound, Ideal_ratio))
 
 #get recoveries
 CL_EI_manual_not_MB <- CL_EI_manual_integrations2 %>% filter(Sample_Type != 'Method_Blank') %>%
   filter(Compound == 'Tris(2-chloroethyl) phosphate-d12' | Compound == 'Triphenyl phosphate-13C18' | Compound == 'Triethyl phosphate-d15 (TEP-d15)' | Compound == 'Pentabromobenzene-13C6'|
            Compound == 'Hexabromobenzene-13C6' | Compound == 'FBDE 208' | Compound == 'FBDE 157' | Compound == 'FBDE 100' | Compound == 'Di-n-butyl phthalate - d4' |
-           Compound == 'Diethyl phthalate-d4' | Compound == 'Bis(2- ethylhexyl) phthalate-d4') %>%
+           Compound == 'Diethyl phthalate-d4' | Compound == 'Bis(2- ethylhexyl) phthalate-d4') %>% #filter for surrogates
   mutate(ISTD_Normalized_Area = ifelse(is.na(ISTD_Normalized_Area), 0, ISTD_Normalized_Area))#NAs were things that weren't found in the sample. turn to 0
 
 CL_EI_manual_Recoveries_merged <- merge(CL_EI_manual_not_MB, CL_EI_manual_MBs, by = c('Compound'), all = T) %>%
@@ -1110,115 +788,6 @@ CL_EI_manual_Recovery_stats <- CL_EI_manual_Recoveries_merged %>%
   group_by(Compound) %>%
   get_summary_stats(Recovery, type = 'common')
 CL_EI_manual_Recovery_stats['RSD'] = CL_EI_manual_Recovery_stats$sd*100/CL_EI_manual_Recovery_stats$mean
-write.csv(CL_EI_manual_Recovery_stats,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/SI_Other_Data_Sets/GC_Recoveries.csv", row.names=FALSE) #export final data frame#
-
-#recovery correct
-CL_EI_manual_integrations2[,'Corresponding_Surrogate']= NA
-CL_EI_not_surrogates <- CL_EI_manual_integrations2 %>%
-  filter(Sample_Type == 'Sample' | Sample_Type == 'Blank') %>% #filter for samples that would have recovery#
-  filter(Compound != 'Tris(2-chloroethyl) phosphate-d12' & Compound != 'Triphenyl phosphate-13C18' & Compound != 'Triethyl phosphate-d15 (TEP-d15)' & Compound != 'Pentabromobenzene-13C6'&
-           Compound != 'Hexabromobenzene-13C6' & Compound != 'FBDE 208' & Compound != 'FBDE 157' & Compound != 'FBDE 100' & Compound != 'Di-n-butyl phthalate - d4' &
-           Compound != 'Diethyl phthalate-d4' & Compound != 'Bis(2- ethylhexyl) phthalate-d4' & Compound != 'FBDE 100(2)')%>%
-  filter(Compound != 'Mirex' & Compound != 'Fluoranthene-d10') %>%
-  filter(Compound != 'Tributyl phosphate' & Compound != 'Tributyl phosphine oxide' & Compound != 'Triethyl phosphate' & Compound != 'Tripentyl phosphate' &
-           Compound != 'Triphenyl phosphate' & Compound != 'Tris(2-chloroethyl) phosphate' & Compound != 'Tris(2-chloropropyl) phosphate') %>% #filter out phosphates because no SS detection
-  mutate(Corresponding_Surrogate = ifelse(Compound == 'Benzyl butyl phthalate - BBP' | Compound == 'Di-n-octyl phthalate - DnOP' |
-                                            Compound == 'Diisodecyl phthalate - DIDP'|
-                                            Compound == 'Diisononyl phthalate - DINP',
-                                          'Bis(2- ethylhexyl) phthalate-d4', Corresponding_Surrogate)) %>%
-  mutate(Corresponding_Surrogate = ifelse( Compound == 'Di-n-butyl phthalate - DBP' | Compound == 'Diisobutyl phthalate - DIBP' |
-                                             Compound == 'Bis(2-ethoxyethyl) phthalate (DEEP)' | Compound == 'Bis(2-butoxyethyl) phthalate'
-                                           | Compound == 'Di-n-hexyl phthalate'
-                                           | Compound == 'Bis(2-ethylhexyl) phthalate - DEHP', 'Di-n-butyl phthalate - d4' , Corresponding_Surrogate)) %>%
-  mutate(Corresponding_Surrogate = ifelse(Compound == 'Diethyl phthalate - DEP' | Compound == 'Dimethyl phthalate' | Compound == 'Bis(2-methoxyethyl) phthalate (DMEP)',
-                                          'Diethyl phthalate-d4', Corresponding_Surrogate)) %>%
-  mutate(Corresponding_Surrogate = ifelse(Compound == 'BDE 100' | Compound == 'BDE 17' | Compound == 'BDE 28' | Compound == 'BDE 47',
-                                          'FBDE 100', Corresponding_Surrogate)) %>%
-  mutate(Corresponding_Surrogate = ifelse(Compound == 'BDE 99',
-                                          'FBDE 157', Corresponding_Surrogate))
-test <- CL_EI_not_surrogates %>% filter(is.na(Corresponding_Surrogate)) #make sure is 0
-
-
-CL_EI_manual_Recoveries_merged_subset <- CL_EI_manual_Recoveries_merged %>%
-  subset(select = c(Compound, Sample, Recovery)) %>%
-  dplyr::rename(Corresponding_Surrogate = Compound)
-
-CL_EI_recovery_corrected <- merge(CL_EI_manual_Recoveries_merged_subset, CL_EI_not_surrogates, by = c('Sample', 'Corresponding_Surrogate'), all = T) %>%
-  filter(!is.na(Recovery)) %>%
-  mutate(ISTD_Normalized_Area = ifelse(is.na(ISTD_Normalized_Area), '0', ISTD_Normalized_Area)) #change non-detects to 0s
-
-CL_EI_recovery_corrected$ISTD_Normalized_Area <- as.numeric(CL_EI_recovery_corrected$ISTD_Normalized_Area )
-
-CL_EI_recovery_corrected[,'Recovery_Corrected_Area'] = CL_EI_recovery_corrected$ISTD_Normalized_Area/(CL_EI_recovery_corrected$Recovery/100)
-
-CL_EI_manual_blanks <- CL_EI_recovery_corrected %>% #filter for blanks
-  filter(Sample_Type == 'Blank') %>%
-  subset(select = c(Recovery_Corrected_Area, Sample, Type, Participant_Number, Compound)) %>% #remove unneeded columns#
-  dplyr::rename(Blank_Area=Recovery_Corrected_Area) %>%
-  mutate(Blank_Area = ifelse(is.na(Blank_Area), 0, Blank_Area)) %>% #NAs were things that weren't found in the sample. turn to 0
-  dplyr::rename(Blank_Sample = Sample)
-
-CL_EI_manual_worn <- CL_EI_recovery_corrected %>% #filter for blanks
-  filter(Sample_Type == 'Sample') %>%
-  subset(select = c(Recovery_Corrected_Area, Sample, Type, Participant_Number, Compound)) %>% #remove unneeded columns#
-  dplyr::rename(Sample_Area=Recovery_Corrected_Area) %>%
-  mutate(Sample_Area = ifelse(is.na(Sample_Area), 0, Sample_Area)) %>% #NAs were things that weren't found in the sample. turn to 0
-  dplyr::rename(Worn_Sample = Sample)
-
-CL_EI_manual_merge <- merge(CL_EI_manual_blanks, CL_EI_manual_worn, by = c('Compound', 'Type', 'Participant_Number'), all = T)
-nrow(CL_EI_manual_worn) - nrow(CL_EI_manual_merge) #should give 0
-
-CL_EI_manual_merge[,'Blank_Subtracted'] = CL_EI_manual_merge$Sample_Area-CL_EI_manual_merge$Blank_Area
-CL_EI_manual_merge[,'Blank_Ratio'] = CL_EI_manual_merge$Blank_Area-CL_EI_manual_merge$Sample_Area
-
-lod_and_percent_detection <- function(df){
-  #replacing with lod may be necessary again later on, but don't use this function for that#
-  var_name <- colnames(df[,grep("P1", colnames(df))]) #set variable for participant samples#
-  df[var_name][df[var_name]==0] <- NA #make all 0s NAs in participant samples#
-  df[var_name][df[var_name]<0] <- NA #make all 0s NAs in participant samples#
-  df[,'Detection_Count'] = NA
-  df <- df %>% mutate(Detection_Count = rowSums(!is.na(.[grepl('P1', colnames(.))]))) #change the value in detection count to the number of columns not equal to NA#
-  number_samples_manual = sum(grepl(paste0("P1"),names(df))) #count number of deployed samples in total#
-  df[,'Percent_Detection'] = df$Detection_Count*100/number_samples_manual
-  df<-df %>%
-    dplyr::mutate(across(all_of(var_name), as.numeric))
-  index2 <- ncol(df) #create variable for column index for the end of sample columns#
-  index3 <- match("Type",names(df)) #create variable for column index for the start of sample columns#
-  start_sample_column = index3 + 1
-  end_sample_column = index2
-  df[, "LOD"] <- apply(df[start_sample_column:end_sample_column], 1, min, na.rm = TRUE) #get minimum value across sample columns into a new column, ignoring NAs#
-  df <- df %>%
-    mutate(LOD = as.numeric(LOD))%>% #turn the non-zero-min column into numeric#
-    mutate(LOD = LOD/5) #get LOD and enter it in the non_zero_min column#
-  for (var in var_name){
-    df[[var]][is.na(df[[var]])] <- df$LOD[is.na(df[[var]])]}
-  df
-}
-CL_EI_manual_blank_sub_wide <- CL_EI_manual_merge %>% filter(Blank_Ratio < 0.35) %>%
-  subset(select = -c(Participant_Number, Blank_Sample, Blank_Ratio, Sample_Area, Blank_Area)) %>%
-  pivot_wider(names_from = Worn_Sample, values_from = Blank_Subtracted)
-#at this points any 0s and NAs either were filtered out because blanks were too high or were not detected#
-
-CL_EI_manual_blank_sub_wide[,'P16_D2_001'] = NA #add back in for consistency w untargeted
-CL_EI_manual_blank_sub <-CL_EI_manual_blank_sub_wide %>%#pivot wider for LODs and percent detection
-  lod_and_percent_detection()
-view(CL_EI_manual_blank_sub)
-
-CL_EI_manual_blank_sub_long <- CL_EI_manual_blank_sub %>%
-  pivot_longer(cols = starts_with('P1'), names_to = 'Sample', values_to = 'Corrected_Area')
-
-CL_EI_manual_blank_sub_long[,'Participant_Number'] = NA
-CL_EI_manual_blank_sub_long[,'Day'] = NA
-CL_EI_manual_blank_sub_long[,'log_Area'] = log10(CL_EI_manual_blank_sub_long$Corrected_Area)
-
-CL_EI_manual_blank_sub_long <- CL_EI_manual_blank_sub_long %>%
-  mutate(Participant_Number = ifelse(grepl('P12', Sample), '12', Participant_Number)) %>% #label samples with participant nu,ber
-  mutate(Participant_Number = ifelse(grepl('P14', Sample), '14', Participant_Number)) %>%
-  mutate(Participant_Number = ifelse(grepl('P15', Sample), '15', Participant_Number)) %>%
-  mutate(Participant_Number = ifelse(grepl('P16', Sample), '16', Participant_Number)) %>%
-  mutate(Day = ifelse(grepl('D1', Sample), '1', Day)) %>%
-  mutate(Day = ifelse(grepl('D2', Sample), '2', Day)) %>%
-  mutate(Day = ifelse(grepl('D3', Sample), '3', Day))
 
 ######load and clean non-targeted data files from MSDial and Compound Discoverer######
 
@@ -1898,7 +1467,7 @@ Dups_Per_Method_ISTD_Corrected$Spk1_001 = as.numeric(as.character(Dups_Per_Metho
 CLEAN_MERGED_ALL_WITH_DUPS1_LC <- Dups_Per_Method_ISTD_Corrected %>% filter(Type != 'EI')
 CLEAN_MERGED_ALL_WITH_DUPS1_LC[,'QC_Pooled_Avg'] = (CLEAN_MERGED_ALL_WITH_DUPS1_LC$QCP_002+CLEAN_MERGED_ALL_WITH_DUPS1_LC$QCP_001)/2
 CLEAN_MERGED_ALL_WITH_DUPS1_LC[,'QC_Blank_Avg'] = (CLEAN_MERGED_ALL_WITH_DUPS1_LC$QCB_002+CLEAN_MERGED_ALL_WITH_DUPS1_LC$QCB_001)/2
-CLEAN_MERGED_ALL_WITH_DUPS1_LC[,'Solvent_Blank_Avg'] = (CLEAN_MERGED_ALL_WITH_DUPS1_LC$Spk1_001+CLEAN_MERGED_ALL_WITH_DUPS1_LC$Spk2_002)/2
+CLEAN_MERGED_ALL_WITH_DUPS1_LC[,'Solvent_Blank_Avg'] = (CLEAN_MERGED_ALL_WITH_DUPS1_LC$Spk1_001+CLEAN_MERGED_ALL_WITH_DUPS1_LC$Spk2_002)/2 #these are spiked method blanks#
 
 CLEAN_MERGED_ALL_WITH_DUPS1_GC <- Dups_Per_Method_ISTD_Corrected %>% filter(Type == 'EI')
 CLEAN_MERGED_ALL_WITH_DUPS1_GC[,'QC_Pooled_Avg'] = CLEAN_MERGED_ALL_WITH_DUPS1_GC$QCP_002
@@ -1913,26 +1482,22 @@ columns_to_convert <- grep("P1", names(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected), v
 
 # Convert those columns to numeric
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[columns_to_convert] <- lapply(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[columns_to_convert], as.numeric)
-######get LODs for pre-blank subtraction subtraction#####
+######get general use columns including QC pooled subtracting QC unworn for later duplicate removal#####
 #change 0s to NA for all QC and participant columsn#
 var_name_P <- colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[,grep("P1", colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected))]) #create variable names to use later for any column with these strings in the name
 var_name_qcp <- colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[,grep("QCP", colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected))])
 var_name_qcb <- colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[,grep("QCB", colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected))])
 
-<<<<<<< HEAD
-CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_P][CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_P]==0] <- NA #set any values in the previously defined columns that are equal 0 as NA. this is to get the LOD wihtout issue#
-=======
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_P][CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_P]==0] <- NA #set any avalues in the previously defined columns that are equal 0 as NA. this is to get the LOD wihtout issue#
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_qcp][CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_qcp]==0] <- NA
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_qcb][CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[var_name_qcb]==0] <- NA
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[, "LOD_pre_solv_sub"] <- apply(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[, which(colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected)=="P12_B_001"):which(colnames(CLEAN_MERGED_ALL_WITH_DUPS1_Corrected)=="QCP_002")], 1, min, na.rm = TRUE)/5 #get LOD for solvent subtraction
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[, 'QC_Pool_Blank_Sub'] = CLEAN_MERGED_ALL_WITH_DUPS1_Corrected$QC_Pooled_Avg - CLEAN_MERGED_ALL_WITH_DUPS1_Corrected$QC_Blank_Avg
 CLEAN_MERGED_ALL_WITH_DUPS1_Corrected[, 'QC_Pool_Blank_Ratio'] = CLEAN_MERGED_ALL_WITH_DUPS1_Corrected$QC_Blank_Avg/CLEAN_MERGED_ALL_WITH_DUPS1_Corrected$QC_Pooled_Avg
 
-#replace blank subtracted QCP with LOD if negative
+#replace blank subtracted QCP with LOD if negative & filter out features only detected in solvent#
 CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected <- CLEAN_MERGED_ALL_WITH_DUPS1_Corrected %>%
-  filter(LOD_pre_solv_sub != Inf) %>% #these were only detected in the solvent #
+  filter(LOD_pre_solv_sub != Inf) %>% #these were only detected in the solvent blank and not the method blank or any samples/blank#
   mutate(QC_Pool_Blank_Sub = ifelse(QC_Pool_Blank_Sub < 0, 0, QC_Pool_Blank_Sub)) %>%
   mutate(QC_Pool_Blank_Sub = ifelse(QC_Pool_Blank_Sub == 0, 0, QC_Pool_Blank_Sub)) %>%
   mutate(QC_Pool_Blank_Sub = ifelse(is.na(QC_Pool_Blank_Sub), 0, QC_Pool_Blank_Sub)) # these were non-detects before solvent subtraction
@@ -1941,12 +1506,7 @@ CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected <- CLEAN_MERGED_ALL_WITH_DUPS1_Correct
 nrow(CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected)
 
 CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected$m.z_similarity = as.numeric(as.character(CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected$m.z_similarity)) #turn the m.z similarity column to numeric#
-
-#######get solv sub LOD#######
-<<<<<<< HEAD
-=======
-##manually selecting columns :(
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
+#######get LOD after solvent subtraction#######
 Solv_Sub_LOD <- CLEAN_MERGED_ALL_WITH_DUPS1_Corrected %>%  #NAs are 0s
   subset(select = c(Type:Metabolite_name, m.z_similarity, Total_score, SMILES, INCHIKEY, P12_B_001:QCP_002, QC_Pooled_Avg:QC_Pool_Blank_Ratio)) %>%
   pivot_longer(names_to = 'Sample', values_to = 'ISTD_Corrected_Value', cols = c(P12_B_001:QCP_002)) %>%
@@ -1955,7 +1515,7 @@ Solv_Sub_LOD <- CLEAN_MERGED_ALL_WITH_DUPS1_Corrected %>%  #NAs are 0s
 Solv_Sub_LOD[,'Solv_Sub_Value'] = Solv_Sub_LOD$ISTD_Corrected_Value- Solv_Sub_LOD$Solvent_Blank_Avg
 Solv_Sub_LOD[,'Solv_Sub_Ratio'] = Solv_Sub_LOD$Solvent_Blank_Avg/Solv_Sub_LOD$ISTD_Corrected_Value
 
-Solv_Sub_LOD_filter <- Solv_Sub_LOD %>% filter(Solv_Sub_Ratio < 0.35) %>%
+Solv_Sub_LOD_filter <- Solv_Sub_LOD %>% filter(Solv_Sub_Ratio < 0.35) %>% #filter for features where solvent is < 0.35 peak area of sample#
   subset(select = -c(Solv_Sub_Ratio, ISTD_Corrected_Value)) %>%
   pivot_wider(names_from = Sample, values_from = Solv_Sub_Value)
 
@@ -2010,10 +1570,7 @@ GC_IDs_Combined  <- bind_rows(gc_inchikey_list) %>%
   ungroup() %>%
   dplyr::rename(Metabolite_name =Identifier)
 mz1_gc_subset <- mz1_gc1
-<<<<<<< HEAD
-=======
 #write.csv(mz1_gc_subset, "/Users/anyaguo/Documents/Research/mz1_gc_subset.csv", row.names = FALSE)
->>>>>>> ae814781060fe804dbcfe0584947a2e94ff1f0d1
 
 mz1_gc_inchikey_merge <- merge(mz1_gc_subset, GC_IDs_Combined, by = c('Metabolite_name'), all = T) %>%
   filter(!is.na(Average_Mz))
@@ -2027,7 +1584,7 @@ mz1_gc_missed_inchikey<-mz1_gc_inchikey_merge %>%
 mz1_gc_missed_inchikey2 <- mz1_gc_missed_inchikey %>% filter(is.na(INCHIKEY)) %>%
   subset(select = -c(INCHIKEY, SMILES))
 
-write.csv(mz1_gc_missed_inchikey, "/Users/anyaguo/Documents/Research/mz90_gc_missed_inchikey.csv", row.names = FALSE)
+#write.csv(mz1_gc_missed_inchikey, "/Users/anyaguo/Documents/Research/mz90_gc_missed_inchikey.csv", row.names = FALSE)
 
 mz1_gc_with_inchikey<- mz1_gc_inchikey_merge %>%
   filter(!is.na(INCHIKEY))
@@ -2046,7 +1603,6 @@ mz1_gc <- rbind(mz1_gc_with_inchikey, mz1_gc_missed_inchikey2_merge) %>%
 
 mz1_gc <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/mz1_gc.csv")
 
-
 ########LC Data - do separately because SMILES will filter out all of the GC data#######
 LC_mz1 <- CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected %>%
   filter(m.z_similarity == 1 & Type != 'EI')
@@ -2057,11 +1613,12 @@ LC_mz1$S.N_average<- as.numeric(LC_mz1$S.N_average)
 LC_mz1$Spectrum_reference_file_name<- as.numeric(LC_mz1$Spectrum_reference_file_name)
 LC_mz1$HRF_Score<- as.numeric(LC_mz1$HRF_Score)
 LC_mz1$SI<- as.numeric(LC_mz1$SI)
-LC_mz1$`Average_Rt(min)`<- as.numeric(LC_mz1$`Average_Rt(min)`)
 
 ######filter by metabolomic name######
 # Remove duplicates, keeping the row with the greatest mz silimaritywith the greatest QC pooled column
+LC_mz1$`Average_Rt(min)` <- as.numeric(LC_mz1$`Average_Rt(min)`)
 mz1_all <- bind_rows(LC_mz1, mz1_gc)
+
 ####LC - filter by SMILES######
 mz1_all1 <- mz1_all %>%
   filter(!is.na(SMILES) & SMILES != 'null') %>% #these would all get filtered into 1 point but that one point can mess things up later for venn diagram number consistencty
@@ -2186,7 +1743,7 @@ mz1_all_gclc <- duplicate_removal_by_sample_avg(mz1_all_gclc1) %>%#inf warnings 
   group_by(Metabolite_name) %>%
   slice(1) %>%
   ungroup()
-write.csv(mz1_all_gclc,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/SI_Other_Data_Sets/Removed_Duplicates.csv", row.names=FALSE) #export final data frame#
+#write.csv(mz1_all_gclc,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/SI_Other_Data_Sets/Removed_Duplicates.csv", row.names=FALSE) #export final data frame#
 
 
 #######here we split into 2 dfs for further analysis: one will be for comparing blanks and samples which will contain solvent subtracted values. the other will be for focusing on particiapnt worn samples, which will have unworn blank subtracted values#####
@@ -2248,6 +1805,7 @@ var_name <- colnames(Participants_Blank_Correct_Wide[,grep("P1", colnames(Partic
 Participants_Blank_Correct_Wide[var_name][Participants_Blank_Correct_Wide[var_name]<0] <- NA
 Participants_Blank_Correct_Wide[var_name][Participants_Blank_Correct_Wide[var_name]==0] <- NA
 
+#@AG: edit this line so it's not manual - the columns used keeps changing so double check#
 Start <- which(colnames(Participants_Blank_Correct_Wide)=="P12_D2_001")
 End <- which(colnames(Participants_Blank_Correct_Wide)=="P16_D3_001") #adjust this wuth appropriate last column
 
@@ -2312,12 +1870,12 @@ max_abund <- max(Participants_Cleaned$log_not_norm_area)
 max_abund-min_abund
 
 heatmap_features <- Participants_Cleaned %>%
-  subset(select = c('Sample', 'Metabolite_name', 'lognormalized_area_to_creatine', 'Percent_Detection', 'INCHIKEY', 'SMILES', 'Type', 'Average_Mz', 'QC_Pool_Blank_Sub', 'LOD_Worn_Sub')) %>% #subset relevant columns. Sample_Area is the blank subtracted sample log transformed#
-  pivot_wider(names_from = Sample, values_from = lognormalized_area_to_creatine) %>%
+  subset(select = c('Sample', 'Metabolite_name', 'log_not_norm_area', 'Percent_Detection', 'INCHIKEY', 'SMILES', 'Type', 'Average_Mz', 'QC_Pool_Blank_Sub', 'LOD_Worn_Sub')) %>% #subset relevant columns. Sample_Area is the blank subtracted sample log transformed#
+  pivot_wider(names_from = Sample, values_from = log_not_norm_area) %>%
   filter(Percent_Detection > 50 | Percent_Detection == 50)
 #get LOD from creatinine normalization
 
-write.csv(heatmap_features,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/heatmap_features.csv") ##export final data frame#
+#write.csv(heatmap_features,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/heatmap_features.csv") ##export final data frame#
 heatmap_data <- Participants_Cleaned %>% #convert to matrix
   filter(Percent_Detection > 50 | Percent_Detection == 50) %>%
   #filter(lognormalized_area_to_creatine == Inf) %>%#
@@ -2336,7 +1894,7 @@ heatmap_data <- Participants_Cleaned %>% #convert to matrix
   subset(select = c('Sample', 'Metabolite_name', 'lognormalized_area_to_creatine')) %>% #subset relevant columns. Sample_Area is the blank subtracted sample log transformed#
   pivot_wider(names_from = Sample, values_from = lognormalized_area_to_creatine)
 
-write.csv(heatmap_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Heatmap_data.csv", row.names=FALSE) #export final data frame#
+#write.csv(heatmap_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Heatmap_data.csv", row.names=FALSE) #export final data frame#
 
 #generate heatmap
 Participants_heatmap_matrix_creatine_norm_blank_sub <- Participants_Cleaned %>% #convert to matrix
@@ -2366,7 +1924,7 @@ Participants_heatmap_matrix_creatine_norm <- pheatmap(Participants_heatmap_matri
 
 #heatmaps for firt 100 features with levels above blanks
 
-Participants_heatmap_matrix_100_norm <- Participants_Cleaned %>% #convert to matrix
+Participants_heatmap_matrix_100_nonorm <- Participants_Cleaned %>% #convert to matrix
   filter(Percent_Detection > 50 | Percent_Detection == 50) %>%
   arrange(desc(QC_Pool_Blank_Sub)) %>%
   mutate(Sample = ifelse(Sample == 'P12_D2_001', '1, Day 2', Sample)) %>%
@@ -2378,10 +1936,11 @@ Participants_heatmap_matrix_100_norm <- Participants_Cleaned %>% #convert to mat
   mutate(Sample = ifelse(Sample == 'P15_D1_001', '3, Day 1', Sample)) %>%
   mutate(Sample = ifelse(Sample == 'P15_D2_001', '3, Day 2', Sample)) %>%
   mutate(Sample = ifelse(Sample == 'P15_D3_001', '3, Day 3', Sample)) %>%
+  mutate(Sample = ifelse(Sample == 'P16_D1_001', '4, Day 1', Sample)) %>%
   mutate(Sample = ifelse(Sample == 'P16_D2_001', '4, Day 2', Sample)) %>%
   mutate(Sample = ifelse(Sample == 'P16_D3_001', '4, Day 3', Sample)) %>%
-  subset(select = c('Sample', 'Metabolite_name', 'lognormalized_area_to_creatine', 'QC_Pool_Blank_Sub')) %>% #subset relevant columns. Sample_Area is the blank subtracted sample log transformed#
-  pivot_wider(names_from = Sample, values_from = lognormalized_area_to_creatine) %>%
+  subset(select = c('Sample', 'Metabolite_name', 'log_not_norm_area', 'QC_Pool_Blank_Sub')) %>% #subset relevant columns. Sample_Area is the blank subtracted sample log transformed#
+  pivot_wider(names_from = Sample, values_from = log_not_norm_area) %>%
   slice_max(order_by = QC_Pool_Blank_Sub, n = 100) %>%
   subset(select = -c(QC_Pool_Blank_Sub)) %>%
   select(-1) %>%
@@ -2419,10 +1978,17 @@ Participants_heatmap_matrix_100_normdf <- Participants_heatmap_matrix_100_normdf
 
 palette <- colorRampPalette(c("#4393C3", "#92C5DE", "#D1E5F0", "#F7F7F7", "#FDDBC7", "#F4A582", "#D6604D", "#B2182B"))
 
-Participants_heatmap_norm100 <- pheatmap(Participants_heatmap_matrix_100_norm,
+Participants_heatmap_nonorm100 <- pheatmap(Participants_heatmap_matrix_100_nonorm,
                                          show_rownames = FALSE, fontsize_col = 30,
                                          fontsize = 28, scale = 'row', border_color = NA)
-save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/heatmap_Feb27.svg", plot = Participants_heatmap_norm100, base_width=25, base_height=14)
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/heatmap_Feb27.svg", plot = Participants_heatmap_norm100, base_width=25, base_height=14)
+save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/heatmap_Apr28_nonorm.svg", plot = Participants_heatmap_nonorm100, base_width=11, base_height=10)
+
+#interactive_heatmap <- plot_ly(z = Participants_heatmap_matrix_100_normdf$lognormalized_area_to_creatine,
+   #                            x = Participants_heatmap_matrix_100_normdf$Sample,
+    #                             y = Participants_heatmap_matrix_100_normdf$Metabolite_name,
+    #                           colors = palette(50), type = "heatmap") %>%
+ # layout(yaxis = list(title = 'Metabolite', showticklabels = FALSE, ticks = FALSE), xaxis = list(title = 'Sample'))
 
 ######solvent sub analysis######
 ######solvent sub analysis######
@@ -2572,7 +2138,7 @@ t_tests_volc <- t_tests_volc %>%
 t_tests_volc[,'p_Category'] = 'Not significantly different'
 t_tests_volc <- t_tests_volc %>%
   mutate(p_Category = case_when((logP > log_p_cuotff & log_FC > 0) ~ 'Higher in Worn',
-                                (logP > log_p_cuotff & log_FC < 0) ~ 'Higher in Unworn', TRUE ~ 'Not significantly different'))
+         (logP > log_p_cuotff & log_FC < 0) ~ 'Higher in Unworn', TRUE ~ 'Not significantly different'))
 
 volc_stats <- t_tests_volc %>%
   group_by(Fold_Category) %>%
@@ -2580,7 +2146,7 @@ volc_stats <- t_tests_volc %>%
   subset(select = c(Fold_Category, n)) %>%
   pivot_wider(names_from = Fold_Category, values_from = n)
 percent_higher_in_worn = volc_stats$`Higher in Worn`*100/(volc_stats$`Higher in Unworn`+volc_stats$`Higher in Worn`)
-max(t_tests_volc$Fold_Difference)
+max(t_tests_volc$log_FC)
 
 volc_n <- t_tests_volc %>% mutate(Type = ifelse(Type == 'C18_Negative', 'C18 Negative', Type)) %>%
   mutate(Type = ifelse(Type == 'C18_Positive', 'C18 Positive', Type)) %>%
@@ -2590,7 +2156,7 @@ volc_n <- t_tests_volc %>% mutate(Type = ifelse(Type == 'C18_Negative', 'C18 Neg
   nrow()
 
 volc_data <- t_tests_volc %>% dplyr::rename(log.p.value = logP)
-write.csv(volc_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Volcano_Data.csv", row.names=FALSE) #export final data frame#
+#write.csv(volc_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Volcano_Data.csv", row.names=FALSE) #export final data frame#
 min(volc_data$p.value)
 max(volc_data$p.value)
 
@@ -2605,9 +2171,13 @@ volc <- t_tests_volc %>%
   theme_classic() +
   scale_x_continuous(limits = c(-12,14))+
   geom_hline(yintercept = log_p_cuotff, linetype = 'dashed', colour = 'black', size = 1) +
+#  geom_hline(yintercept = log_p_cuotff2, linetype = 'dotted', colour = 'black', size = 1) +
+#  geom_hline(yintercept = log_p_cuotff3, linetype = 'solid', colour = 'black', size = 1) +
   labs(x = expression(atop('Log'[2]*' Fold Difference (Peak Area)')), y = expression('-Log'[2]* ' p value'), title = paste0('n =', volc_n)) +
   scale_colour_manual(values = c('#FBB4AE', '#B3CDE3', 'grey')) +
+  #scale_colour_manual(values = c('#377EB8', '#4DAF4A'))+
   theme(legend.position = 'none')+
+  #scale_shape_manual(values = c(16, 17, 13, 18, 19)) +  # Use solid circle, triangle, square, and diamond
   theme(
     axis.title.x = element_text(size = 30),
     axis.title.y = element_text(size = 30),
@@ -2618,15 +2188,21 @@ volc <- t_tests_volc %>%
   theme(legend.title=element_blank(), plot.title = element_text(hjust = 0.5))
 volc
 
-save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Volcano_Feb27.svg", plot = volc, base_width=12.82, base_height=8.34)
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Volcano_Feb27.svg", plot = volc, base_width=12.82, base_height=8.34)
 
 FC_Filtered_n <- t_tests_volc %>%
   nrow()
 FC_filtered_Data <- t_tests_volc %>%
   mutate(Fold_Category = ifelse(log_FC > 0, 'Higher in Worn', Fold_Category)) %>%
-  mutate(Fold_Category = ifelse(log_FC < 0, 'Higher in Unworn', Fold_Category))
+  mutate(Fold_Category = ifelse(log_FC < 0, 'Higher in Unworn', Fold_Category)) %>%
+  group_by(Fold_Category) %>%
+  summarise(n=n()) %>%
+  pivot_wider(names_from = Fold_Category, values_from = n)
 
-write.csv(FC_filtered_Data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Fold_Change_Filtered.csv", row.names=FALSE) #export final data frame#
+higher_in_worn_volc <- FC_filtered_Data$`Higher in Worn`/(FC_filtered_Data$`Higher in Unworn`+FC_filtered_Data$`Higher in Worn`)
+max_fc_volc <- 2^max(t_tests_volc$log_FC)
+
+#write.csv(FC_filtered_Data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Fold_Change_Filtered.csv", row.names=FALSE) #export final data frame#
 
 plot_FC_all_filtered <- t_tests_volc %>%
   mutate(Fold_Category = ifelse(log_FC > 0, 'Higher in Worn', Fold_Category)) %>%
@@ -2661,6 +2237,7 @@ plot_FC_all_filtered <- t_tests_volc %>%
   #theme(legend.justification = "top")
   theme(legend.position = c(0.8, 0.97), legend.box.background = element_rect(colour = "black")) #move legend in plot
 plot_FC_all_filtered
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Fold_Plot_Filtered_Feb27.svg", plot = plot_FC_all_filtered, base_width=12, base_height=8.34)
 
 
 ######try running all GC data through pubchem - for unfiltered #######
@@ -2706,6 +2283,7 @@ GC_IDs_Combined_all  <- bind_rows(gc_inchikey_list) %>%
   ungroup() %>%
   dplyr::rename(Metabolite_name =Identifier)
 
+#write.csv(GC_IDs_Combined_all,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/GC_IDs_Combined_all.csv", row.names=FALSE) #export final data frame#
 GC_IDs_Combined_all <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/GC_IDs_Combined_all.csv", col_types = cols(.default = "c"))
 
 GC_all_unique_names_subset <- CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected %>%
@@ -2895,7 +2473,6 @@ All_no_dups_solv_sub_stats <- All_no_dups_solv_sub%>%
   group_by(Fold_Category) %>%
   get_summary_stats(log_FC, type = 'common')
 
-
 plot_FC_all <- All_no_dups_solv_sub %>%
   mutate(Fold_Category = ifelse(log_FC > 0, 'Higher in Worn', Fold_Category)) %>%
   mutate(Fold_Category = ifelse(log_FC < 0, 'Higher in Unworn', Fold_Category)) %>%
@@ -2914,7 +2491,7 @@ plot_FC_all <- All_no_dups_solv_sub %>%
   labs(y = expression('Log'[2]*' Fold Difference (Peak Area)'), x = 'Average m/z', title =
          paste0('n = ',FC_all_n)) +
   scale_colour_manual(values = c('#FBB4AE', '#B3CDE3', 'grey')) +
-  scale_y_continuous(limits = c(-12,14))+
+ scale_y_continuous(limits = c(-12,14))+
   theme(legend.title=element_blank(), legend.position = 'bottom')+
   theme(legend.position = 'right')+
   #scale_shape_manual(values = c(16, 17, 13, 18, 19)) +  # Use solid circle, triangle, square, and diamond
@@ -2932,8 +2509,13 @@ plot_FC_all
 plot_FC_all_data <- All_no_dups_solv_sub %>%
   mutate(Fold_Category = ifelse(log_FC > 0, 'Higher in Worn', Fold_Category)) %>%
   mutate(Fold_Category = ifelse(log_FC < 0, 'Higher in Unworn', Fold_Category)) %>%
-  mutate(Fold_Category = ifelse(log_FC == 0, 'none', Fold_Category))
+  mutate(Fold_Category = ifelse(log_FC == 0, 'none', Fold_Category)) %>% 
+  group_by(Fold_Category) %>%
+  summarise(n=n()) %>%
+  pivot_wider(names_from = Fold_Category, values_from = n)
 #write.csv(plot_FC_all_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Fold_Change_All_Data.csv", row.names=FALSE) #export final data frame#
+higher_in_worn <- plot_FC_all_data$`Higher in Worn`/(plot_FC_all_data$`Higher in Unworn`+plot_FC_all_data$`Higher in Worn`)
+max_fold_diff <- 2^(max(All_no_dups_solv_sub$log_FC))
 
 ##Venn Diagram######################
 #start from the df that still has duplicates across methods. Our goal now is to filter so that each method has only only 1 replicate#
@@ -3105,7 +2687,7 @@ redo_worn_analysis <- function(df){
 #check for remaining duplicates - msdial sometimes assigns two of the same peak different alignment ids but they'll have different samples despite the same QCP#
 
 MERGED_ALL_NO_DUPS_PER_METHOD_SUBSET_LOD_Corrected1 <- rbind(EI_nd, hilic_pos_nd, hilic_neg_nd, c18_pos_nd, c18_neg_nd)
-# redo_worn_analysis()
+ # redo_worn_analysis()
 # filter(Percent_Detection == 50 | Percent_Detection > 50)
 
 Venn_Remaining_Dups <- MERGED_ALL_NO_DUPS_PER_METHOD_SUBSET_LOD_Corrected1 %>% group_by(Type, Metabolite_name) %>% filter(n()>1)
@@ -3131,7 +2713,7 @@ venn_data <- MERGED_ALL_NO_DUPS_PER_METHOD_SUBSET_LOD_Corrected %>% mutate(Type 
   mutate(Type = ifelse(Type == 'Hilic_Negative', 'HILIC-ESI\u207B', Type)) %>%
   mutate(Type = ifelse(Type == 'Hilic_Positive', 'HILIC-ESI\u207A', Type))
 
-write.csv(venn_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Venn_data.csv", row.names=FALSE) #export final data frame#
+#write.csv(venn_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Venn_data.csv", row.names=FALSE) #export final data frame#
 
 overlap <- MERGED_ALL_NO_DUPS_PER_METHOD_SUBSET_LOD_Corrected %>%
   filter(Type != 'EI') %>%
@@ -3142,7 +2724,7 @@ overlap <- MERGED_ALL_NO_DUPS_PER_METHOD_SUBSET_LOD_Corrected %>%
   slice(1) %>%
   subset(select = c(Metabolite_name, INCHIKEY, SMILES))
 
-write.csv(only_samples, "/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/SI_Other_Data_Sets/Features_only_in_samples.csv")
+#write.csv(only_samples, "/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/SI_Other_Data_Sets/Features_only_in_samples.csv")
 
 
 ven_list <- MERGED_ALL_NO_DUPS_PER_METHOD_SUBSET_LOD_Corrected %>%
@@ -3173,15 +2755,15 @@ ven3 <- ggVennDiagram(ven_list, stroke_size = 0.5, set_size = 8,
   #scale_fill_gradient(low = '#Fab000', high = '#619CFF', name = 'Count')+#
   scale_x_continuous(expand = expansion(mult = .2))+ #expand plot so titles aren't cut off#
   scale_fill_distiller(palette = "Reds", direction = 1, name = "Count")+
-  theme(
-    legend.title = element_text(size = 20), legend.text = element_text(size = 18),
-    title = element_text(size = 25), strip.text = element_text(size = 18)) +# Customize theme
-  #scale_fill_gradient(low = '#FFFFF0', high = '#619CFF', name = 'Count')+#
-  #scale_fill_brewer(palette = 'Set1')#
+theme(
+  legend.title = element_text(size = 20), legend.text = element_text(size = 18),
+  title = element_text(size = 25), strip.text = element_text(size = 18)) +# Customize theme
+#scale_fill_gradient(low = '#FFFFF0', high = '#619CFF', name = 'Count')+#
+#scale_fill_brewer(palette = 'Set1')#
   ggplot2::theme(legend.position = "right")
 ven3
-save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Venn_Diagram_Feb27.svg", plot = ven3, base_width=8.34, base_height=7)
-
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Venn_Diagram_Feb27.svg", plot = ven3, base_width=8.34, base_height=7)
+#
 
 heatmap_palette <- colorRampPalette(c("#4393C3", "#92C5DE", "#D1E5F0", "#F7F7F7", "#FDDBC7", "#F4A582", "#D6604D", "#B2182B"))(100)
 
@@ -3196,7 +2778,7 @@ ven_colours2 <- ggVennDiagram(ven_list, stroke_size = 0.5, set_size = 8,
 ven_colours2
 
 
-save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/venn_Feb2.svg", plot = ven, base_width=13, base_height=10)
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/venn_Feb2.svg", plot = ven, base_width=13, base_height=10)
 brewer.pal(6, "Pastel1")
 
 pastel1 <- c("#FBB4AE", "#B3CDE3", "#CCEBC5", "#DECBE4",'#FED9A6')
@@ -3211,7 +2793,7 @@ venn_plot_manual <- ggvenn(ven_list, stroke_size = 0.7,fill_alpha = 0.2,
   scale_y_continuous(expand = expansion(mult = 0.2)) #expand plot so titles aren't cut off#
 
 venn_plot_manual
-save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/venn_Feb2.pdf", plot = venn_plot_manual, base_width=13, base_height=10)
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/venn_Feb2.pdf", plot = venn_plot_manual, base_width=13, base_height=10)
 
 
 #get the 54 compounds overlapping#
@@ -3319,7 +2901,7 @@ gclcven <- ggVennDiagram(gclcven_list, stroke_size = 0.5, set_size = 8,
 gclcven
 #save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/GC_LC_Ven_Feb27.svg", plot = gclcven, base_width=8, base_height=6)
 
-######import classyfire data######
+######import classyfire######
 
 CL_Classification_df_combinedwide1 <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/CL_Classification_df_combinedwide1.csv", col_types = cols(.default = "c"))
 CL_Classification_df_combinedwide <- CL_Classification_df_combinedwide1[!duplicated(CL_Classification_df_combinedwide1), ]
@@ -3406,7 +2988,7 @@ heatmap_features_renamed <- heatmap_features %>% subset(select = c(Metabolite_na
 
 CL_Classification_All_Filtered <- merge(heatmap_features_renamed, CL_Classification_All_Filtered1, by = c('Compound'))
 
-write.csv(CL_Classification_All_Filtered,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Dendrogram_data_Mar3.csv", row.names=FALSE) #export final data frame#
+#write.csv(CL_Classification_All_Filtered,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Dendrogram_data_Mar3.csv", row.names=FALSE) #export final data frame#
 
 
 fills_combined_filtered <- fills_combined[1:length(unique(CL_Classification_All_Filtered$Superclass))] #get elgnth of colours equal to legnth of superclasses
@@ -3502,6 +3084,13 @@ phylogenic_tree <- function(df){
     tree$edge.length[is.na(tree$edge.length) | tree$edge.length == 'NaN'] <- 0.5}
 
   empty_tips <- tree$tip.label[tree$tip.label == "" | tree$tip.label == " "]
+
+  # Map superclasses to unique colors
+  # fills <- c(sapply(c("Set1", "Set2"),
+  #    function(x) brewer.pal(7, x)))
+  #fills <- fills[1:length(unique(clean_data$Superclass))]
+  ## superclass_colors <- setNames(fills, unique(clean_data$Superclass))
+  # names(superclass_colors) <- unique(clean_data$Superclass)
 
   # Initialize all edge colors as black
   edge_colors <- rep("black", nrow(tree$edge))
@@ -3631,7 +3220,7 @@ mass_vs_class_plot_data <- merge(class_vs_mass, mass_vs_class, by = c('Classific
   filter(!is.na(Label)) %>%
   group_by(Classification) %>%
   filter(n() > 10)
-write.csv(mass_vs_class_plot_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Density_Data.csv", row.names=FALSE) #export final data frame#
+#write.csv(mass_vs_class_plot_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Density_Data.csv", row.names=FALSE) #export final data frame#
 
 mass_vs_class_plot
 fills <- c(sapply(c("Set1", "Set2"),
@@ -3665,7 +3254,7 @@ mass_vs_class_plot2 <- merge(class_vs_mass, mass_vs_class, by = c('Classificatio
 
 mass_vs_class_plot2
 
-#######boxplots by class######
+#######boxplots by class - right now uses all classyfires regardless of NAs in other rows######
 CL_Classification_df_combined_filtered_rename<- CL_Classification_df_combinedwide %>%
   dplyr::rename(INCHIKEY = InChIKey)
 
@@ -3679,11 +3268,11 @@ CL_Classification_df_combined_filtered_Classmerged <- CL_Classification_df_combi
 CL_Classification_df_combined_filtered_Class <- CL_Classification_df_combined_filtered_Classmerged %>%
   filter(Subclass == 'Phosphate esters' | Subclass == 'Alkyl fluorides') %>%
   filter(Metabolite_name != 'Ethanesulfonamide, 1,1,2,2,2-pentafluoro-') %>%#duplicate
-  pivot_longer(cols = starts_with('P1'), names_to = 'Sample', values_to = 'log_norm_area')
-CL_Classification_df_combined_filtered_Class[,'norm_area'] = 10^(CL_Classification_df_combined_filtered_Class$log_norm_area)
+  pivot_longer(cols = starts_with('P1'), names_to = 'Sample', values_to = 'log_notnorm_area')
+CL_Classification_df_combined_filtered_Class[,'area'] = 10^(CL_Classification_df_combined_filtered_Class$log_notnorm_area)
 alkyl_fluorides_stats <- CL_Classification_df_combined_filtered_Class %>% filter(Subclass == 'Alkyl fluorides') %>%
   group_by(Metabolite_name) %>%
-  dplyr::summarise(mean = mean(norm_area), sd = sd(norm_area)) %>%
+  dplyr::summarise(mean = mean(area), sd = sd(area)) %>%
   ungroup()
 alkyl_fluorides_stats[,'CV'] = alkyl_fluorides_stats$sd*100/alkyl_fluorides_stats$mean
 
@@ -3692,7 +3281,7 @@ max(alkyl_fluorides_stats$mean)
 
 OPE_stats <- CL_Classification_df_combined_filtered_Class %>% filter(Subclass == 'Phosphate esters') %>%
   group_by(Metabolite_name) %>%
-  dplyr::summarise(mean = mean(norm_area), sd = sd(norm_area)) %>%
+  dplyr::summarise(mean = mean(area), sd = sd(area)) %>%
   ungroup()
 OPE_stats[,'CV'] = OPE_stats$sd*100/OPE_stats$mean
 min(OPE_stats$mean)
@@ -3723,22 +3312,23 @@ boxplot_exo_data <- CL_Classification_df_combined_filtered_Class %>%  #data fram
   mutate(Metabolite_name = ifelse(Metabolite_name == '1,1,2,2,2-Pentafluoroethanesulfonamide', 'PFEtSA', Metabolite_name)) %>%
   mutate(Metabolite_name = ifelse(Metabolite_name == 'Tri(butoxyethyl) phosphate', 'TBOEP', Metabolite_name)) %>%
   mutate(Metabolite_name = ifelse(Metabolite_name == 'Perfluorodecyl phosphate', '8:2 PAPS', Metabolite_name)) %>%
-  mutate(Metabolite_name = ifelse(Metabolite_name == 'Diphenyl phosphate', 'DPP', Metabolite_name)) %>%
-  mutate(Metabolite_name = ifelse(Metabolite_name == '1,1,2,2,2-pentafluoroethanesulfonamide', 'PFEtSA', Metabolite_name)) %>%
+mutate(Metabolite_name = ifelse(Metabolite_name == 'Diphenyl phosphate', 'DPP', Metabolite_name)) %>%
+mutate(Metabolite_name = ifelse(Metabolite_name == '1,1,2,2,2-pentafluoroethanesulfonamide', 'PFEtSA', Metabolite_name)) %>%
   mutate(Metabolite_name = ifelse(Metabolite_name == 'Bis(2-ethylhexyl)phosphate', 'HDEHP', Metabolite_name)) %>%
   mutate(Metabolite_name = ifelse(Metabolite_name == 'PFSM-carboxylic_acid', 'PFSM-carboxylic acid', Metabolite_name)) %>%
   mutate(Metabolite_name = ifelse(Metabolite_name == 'Diethyl phosphate', 'DPF', Metabolite_name)) %>%
   mutate(Metabolite_name = ifelse(Metabolite_name == 'Bis(2-ethylhexyl)phosphate', 'HDEHP', Metabolite_name)) %>%
   mutate(Metabolite_name = ifelse(Metabolite_name == '1,1,2,2-Tetrahydroperfluoro-1-octadecanol', '16:2 FTOH', Metabolite_name)) %>%
-  mutate(Metabolite_name = ifelse(Metabolite_name == 'Perfluoroethanesulfonic acid', 'PFESA', Metabolite_name))
+mutate(Metabolite_name = ifelse(Metabolite_name == 'Perfluoroethanesulfonic acid', 'PFESA', Metabolite_name))
 
-write.csv(boxplot_exo_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Boxplot_exo_data.csv", row.names=FALSE) #export final data frame#
+#write.csv(boxplot_exo_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Boxplot_exo_data.csv", row.names=FALSE) #export final data frame#
 
 nOPEs <- boxplot_exo_data %>% filter(Subclass == 'Phosphate esters') %>% group_by(Metabolite_name) %>% slice(1) %>% nrow()
 nFluroides <- boxplot_exo_data %>% filter(Subclass == 'Alkyl fluorides') %>% group_by(Metabolite_name) %>% slice(1) %>% nrow()
 
+
 boxplot_exo_classes <- boxplot_exo_data %>%
-  ggplot(aes(y = reorder(Metabolite_name, log_norm_area, FUN = median), x = log_norm_area))+
+  ggplot(aes(y = reorder(Metabolite_name, log_notnorm_area, FUN = median), x = log_notnorm_area))+
   theme_classic()+
   geom_boxplot(fill = '#FBB4AE', alpha = 1, outliers = TRUE, width=0.6, outlier.size=2)+
   # stat_summary(fun=base::mean, colour="black", geom="point",shape='square', size=2, show.legend=FALSE,
@@ -3746,7 +3336,7 @@ boxplot_exo_classes <- boxplot_exo_data %>%
   facet_nested_wrap(~Subclass, dir = "v", strip.position = "top",
                     axes = "all", remove_labels = "x", scales = 'free', nrow = 3)+  #split plots#
   theme(strip.background = element_rect(colour = "black", fill = "white"))+
-  labs(x = expression('log'[10]* ' Area, Creatinine Normalized'), y = ' ', fill = 'Compound')+
+  labs(x = expression('log'[10]* ' Area'), y = ' ', fill = 'Compound')+
   theme(axis.title.x = element_text(size = 37), axis.title.y = element_text(size = 30), axis.text.x = element_text(size = 30), axis.text.y = element_text(size = 30), legend.title = element_text(size = 20),
         legend.text = element_text(size = 18),title = element_text(size = 15), strip.text = element_text(size = 37))  +
   theme(legend.position = "right")+
@@ -3756,11 +3346,11 @@ boxplot_exo_classes <- boxplot_exo_data %>%
   guides(fill="none", colour = 'none') #remove legend
 boxplot_exo_classes
 
-save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Boxplot_exogenous.svg", plot = boxplot_exo_classes, base_width=12, base_height=14)
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Boxplot_exogenous.svg", plot = boxplot_exo_classes, base_width=12, base_height=14)
 
 CL_Classification_df_combined_filtered_endo <- CL_Classification_df_combined_filtered_Classmerged %>%
   filter(Subclass == 'Amino acids, peptides, and analogues' | Subclass == 'Bile acids, alcohols and derivatives') %>%
-  pivot_longer(cols = starts_with('P1'), names_to = 'Sample', values_to = 'log_norm_area') %>%
+  pivot_longer(cols = starts_with('P1'), names_to = 'Sample', values_to = 'log_notnorm_area') %>%
   separate_wider_delim(Metabolite_name, "MS2: ", names = c("Discard", "Metabolite_name"), too_few = c('align_end')) %>% #trying to get rid of 'No MS2'
   separate_wider_delim(Metabolite_name, "; P", names = c("Metabolite_name", "Discard2"), too_few = c("align_start")) %>% #use align start to address things without deliminator#
   separate_wider_delim(Metabolite_name, "!", names = c("Discard3", "Metabolite_name"), too_few = c("align_end")) %>%
@@ -3884,17 +3474,19 @@ boxplot_endo_data <- CL_Classification_df_combined_filtered_endo %>%  #data fram
   mutate(Metabolite_name = ifelse(Metabolite_name == 'Polyporenic acid C', 'PAC', Metabolite_name)) %>%
   mutate(Metabolite_name = ifelse(Metabolite_name == '2-O-Acetyl-20-hydroxyecdysone', '2-O-Ac-20HE', Metabolite_name))
 
+#write.csv(boxplot_endo_data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Boxplot_endo_data.csv", row.names=FALSE) #export final data frame#
+
 nAA <- boxplot_endo_data %>% filter(Subclass == 'Amino acids, peptides, and analogues') %>% group_by(Metabolite_name) %>% slice(1) %>% nrow()
 nbile <- boxplot_endo_data %>% filter(Subclass == 'Bile acids, alcohols and derivatives') %>% group_by(Metabolite_name) %>% slice(1) %>% nrow()
 
 boxplot_endo_classes <- boxplot_endo_data%>%
-  ggplot(aes(y = reorder(Metabolite_name, log_norm_area, FUN = median), x = log_norm_area, fill = Superclass))+
+  ggplot(aes(y = reorder(Metabolite_name, log_notnorm_area, FUN = median), x = log_notnorm_area, fill = Superclass))+
   theme_classic()+
   geom_boxplot(fill = '#FBB4AE', alpha = 1, outliers = TRUE, width=0.6, outlier.size=2)+
   facet_wrap(~Subclass, dir = "v", strip.position = "top", scales = 'free_y',
-             axes = "all", nrow = 2)+  #split plots#
+                    axes = "all", nrow = 2)+  #split plots#
   theme(strip.background = element_rect(colour = "black", fill = "white"))+
-  labs(x = expression('log'[10]* ' Area, Creatinine Normalized'), y = ' ', fill = 'Compound')+
+  labs(x = expression('log'[10]* ' Area'), y = ' ', fill = 'Compound')+
   theme(legend.position = "right")+
   theme(axis.title.x = element_text(size = 37), axis.title.y = element_text(size = 30), axis.text.x = element_text(size = 30), axis.text.y = element_text(size = 30), legend.title = element_text(size = 20),
         legend.text = element_text(size = 18),title = element_text(size = 15), strip.text = element_text(size = 37))  +
@@ -3903,19 +3495,129 @@ boxplot_endo_classes <- boxplot_endo_data%>%
   scale_x_continuous(limits = c(-6,4))+
   guides(fill="none", colour = 'none') #remove legend
 boxplot_endo_classes
-
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Boxplot_endogenous.svg", plot = boxplot_endo_classes, base_width=15, base_height=14)
+box1n = nFluroides + nOPEs
+box2n = nAA + nbile
 
 plot_grid(boxplot_exo_classes, boxplot_endo_classes, nrow = 2, align = "v", axis = "l",
           rel_heights = c(box1n, box2n))
 
+CL_Classification_df_combined_filtered_endo2 <- CL_Classification_df_combined_filtered_Classmerged %>%
+  filter(Subclass == 'Hydroxysteroids' | Subclass == 'Bile acids, alcohols and derivatives'| Subclass == 'Ceramides') %>%
+  pivot_longer(cols = starts_with('P1'), names_to = 'Sample', values_to = 'log_norm_area') %>%
+  separate_wider_delim(Metabolite_name, "MS2: ", names = c("Discard", "Metabolite_name"), too_few = c('align_end')) %>% #trying to get rid of 'No MS2'
+  separate_wider_delim(Metabolite_name, "; P", names = c("Metabolite_name", "Discard2"), too_few = c("align_start")) %>% #use align start to address things without deliminator#
+  separate_wider_delim(Metabolite_name, "!", names = c("Discard3", "Metabolite_name"), too_few = c("align_end")) %>%
+  separate_wider_delim(Metabolite_name, "; C", names = c("Metabolite_name", "Discard4"), too_few = c("align_start")) %>%
+  separate_wider_delim(Metabolite_name, "; L", names = c("Metabolite_name", "Discard5"), too_few = c("align_start"))
+unique(CL_Classification_df_combined_filtered_endo2$SMILES)
+
+unique(CL_Classification_df_combined_filtered_endo2$Metabolite_name)
+
+boxplot_endo_classes2 <- CL_Classification_df_combined_filtered_endo2 %>%  #data frame#
+  filter(Metabolite_name != '2,3,14-trihydroxy-10,13-dimethyl-17-(2,3,6,7-tetrahydroxy-5,6-dimethylheptan-2-yl)-2,3,4,5,9,11,12,15,16,17-decahydro-1H-cyclopenta[a]phenanthren-6-one'&
+           Metabolite_name != '(R)-4-((3R,5R,8R,9S,10S,12S,13R,14S,17R)-3,12-dihydroxy-10,13-dimethylhexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)-N-(pyridin-2-ylmethyl)pentanamide' &
+           Metabolite_name != '2-((4R)-4-((3R5R9S10S13R14S17R)-3-hydroxy-1013-dimethylhexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)-N-methylpentanamido)ethane-1-sulfonic acid\"\"' &
+           Metabolite_name != '(3R7R8R9S10S12S13R14S17R)-17-((2R5R)-57-dihydroxyheptan-2-yl)-1013-dimethylhexadecahydro-1H-cyclopenta[a]phenanthrene-3712-triol\"\"' &
+           Metabolite_name != 'ethyl (R)-4-((5R7R8R9S10S13R14S17R)-7-hydroxy-1013-dimethyl-312-dioxohexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)pentanoate\"\"' &
+           Metabolite_name != '2-((4R)-4-((3R5S7S9S10S13R14S17R)-37-dihydroxy-1013-dimethylhexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)-22-dimethylpentanamido)ethane-1-sulfonic acid""' &
+           Metabolite_name != '2-((4R)-4-((5R7R8R9S10S12S13R17R)-712-dihydroxy-1013-dimethyl-3-oxohexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)pentanamido)ethane-1-sulfonic acid\"\"' &
+           Metabolite_name != '(R)-4-((8S9S10R13R14S17R)-1013-dimethyl-3-oxo-2367891011121314151617-tetradecahydro-1H-cyclopenta[a]phenanthren-17-yl)pentanoic acid\"\"' &
+           Metabolite_name != 'NCGC00385132-01_C23H28O7_1-Phenanthrenecarboxylic acid, 10-(acetyloxy)-1,2,4a,9,10,10a-hexahydro-5,9-dihydroxy-1,4a-dimethyl-7-(1-methylethyl)-2-oxo-, methyl ester, (1R,4aS,9S,10S)-' &
+           Metabolite_name != 'methyl 2,4,10-triacetyloxy-5,9-dihydroxy-1,4a-dimethyl-7-propan-2-yl-2,3,4,9,10,10a-hexahydrophenanthrene-1-carboxylate') %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == '11BETA,17,21-TRIHYDROXYPREGN-4-ENE-3,20-DIONE 17-BUTYRATE',
+    'Hydrocortisone 17-butyrate', Metabolite_name)) %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == 'CORTICOSTERONE',
+    'Corticosterone', Metabolite_name)) %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == '11BETA,17,21-TRIHYDROXYPREGN-4-ENE-3,20-DIONE 17-BUTYRATE',
+    'Hydrocortisone 17-butyrate', Metabolite_name)) %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == 'GLYCOCHENODEOXYCHOLATE',
+    'Glycohenodeoxycholate', Metabolite_name)) %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == 'Cysteine conjugated chenodeoxycholic acid',
+    'Cysteine conjugated\nchenodeoxycholic acid', Metabolite_name)) %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == 'glycolithocholic acid',
+    'Glycolithocholic acid', Metabolite_name)) %>%
+  ggplot(aes(y = Metabolite_name, x = log_norm_area))+
+  theme_classic()+
+  geom_boxplot(fill = '#FBB4AE', alpha = 1, outliers = TRUE, width=0.5, outlier.size=2)+
+  # stat_summary(fun=base::mean, colour="black", geom="point",shape='square', size=2, show.legend=FALSE,
+  #            position = position_dodge2(width = 0.75, preserve = "single"))+ #show means#
+  facet_nested_wrap(~Subclass, dir = "v", strip.position = "top",
+                    axes = "all", remove_labels = "x", scales = 'free', nrow = 3)+  #split plots#
+  theme(strip.background = element_rect(colour = "black", fill = "white"))+
+  labs(x = 'log Area', y = 'Compound', fill = 'Compound')+
+  theme(axis.title.x = element_text(size = 30), axis.title.y = element_text(size = 30), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 20), legend.title = element_text(size = 20),
+        legend.text = element_text(size = 18),title = element_text(size = 15), strip.text = element_text(size = 30))  +
+  theme(legend.position = "right")+
+  force_panelsizes(rows = c(2,0.2,1.1))+
+  #scale_fill_brewer(palette = 'Set2')+
+  guides(fill="none", colour = 'none') #remove legend
+boxplot_endo_classes2
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/boxplot_endo_classes2.pdf", plot = boxplot_endo_classes2, base_width=22, base_height=27)
+
+CL_Classification_df_combined_filtered_endo3 <- CL_Classification_df_combined_filtered_Classmerged %>%
+  filter(Subclass == 'Glycerophosphocholines' | Subclass == 'Bile acids, alcohols and derivatives'| Subclass == 'Ceramides') %>%
+  pivot_longer(cols = starts_with('P1'), names_to = 'Sample', values_to = 'log_norm_area') %>%
+  separate_wider_delim(Metabolite_name, "MS2: ", names = c("Discard", "Metabolite_name"), too_few = c('align_end')) %>% #trying to get rid of 'No MS2'
+  separate_wider_delim(Metabolite_name, "; P", names = c("Metabolite_name", "Discard2"), too_few = c("align_start")) %>% #use align start to address things without deliminator#
+  separate_wider_delim(Metabolite_name, "!", names = c("Discard3", "Metabolite_name"), too_few = c("align_end")) %>%
+  separate_wider_delim(Metabolite_name, "; C", names = c("Metabolite_name", "Discard4"), too_few = c("align_start")) %>%
+  separate_wider_delim(Metabolite_name, "; L", names = c("Metabolite_name", "Discard5"), too_few = c("align_start"))
+
+
+boxplot_endo_classes3 <- CL_Classification_df_combined_filtered_endo3 %>%  #data frame#
+  filter(Metabolite_name != '2,3,14-trihydroxy-10,13-dimethyl-17-(2,3,6,7-tetrahydroxy-5,6-dimethylheptan-2-yl)-2,3,4,5,9,11,12,15,16,17-decahydro-1H-cyclopenta[a]phenanthren-6-one'&
+           Metabolite_name != '(R)-4-((3R,5R,8R,9S,10S,12S,13R,14S,17R)-3,12-dihydroxy-10,13-dimethylhexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)-N-(pyridin-2-ylmethyl)pentanamide' &
+           Metabolite_name != '2-((4R)-4-((3R5R9S10S13R14S17R)-3-hydroxy-1013-dimethylhexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)-N-methylpentanamido)ethane-1-sulfonic acid\"\"' &
+          Metabolite_name != '(3R7R8R9S10S12S13R14S17R)-17-((2R5R)-57-dihydroxyheptan-2-yl)-1013-dimethylhexadecahydro-1H-cyclopenta[a]phenanthrene-3712-triol\"\"' &
+           Metabolite_name != 'ethyl (R)-4-((5R7R8R9S10S13R14S17R)-7-hydroxy-1013-dimethyl-312-dioxohexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)pentanoate\"\"' &
+          Metabolite_name != '2-((4R)-4-((3R5S7S9S10S13R14S17R)-37-dihydroxy-1013-dimethylhexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)-22-dimethylpentanamido)ethane-1-sulfonic acid""' &
+           Metabolite_name != '2-((4R)-4-((5R7R8R9S10S12S13R17R)-712-dihydroxy-1013-dimethyl-3-oxohexadecahydro-1H-cyclopenta[a]phenanthren-17-yl)pentanamido)ethane-1-sulfonic acid\"\"' &
+           Metabolite_name != '(R)-4-((8S9S10R13R14S17R)-1013-dimethyl-3-oxo-2367891011121314151617-tetradecahydro-1H-cyclopenta[a]phenanthren-17-yl)pentanoic acid\"\"') %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == 'GLYCOCHENODEOXYCHOLATE',
+    'Glycohenodeoxycholate', Metabolite_name)) %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == 'GLYCOCHENODEOXYCHOLATE',
+    'Glycohenodeoxycholate', Metabolite_name)) %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == 'Cysteine conjugated chenodeoxycholic acid',
+    'Cysteine conjugated\nchenodeoxycholic acid', Metabolite_name)) %>%
+  mutate(Metabolite_name = ifelse(
+    Metabolite_name == 'glycolithocholic acid',
+    'Glycolithocholic acid', Metabolite_name)) %>%
+  ggplot(aes(y = Metabolite_name, x = log_norm_area))+
+  theme_classic()+
+  geom_boxplot(fill = '#FBB4AE', alpha = 1, outliers = TRUE, width=0.6, outlier.size=2)+
+  # stat_summary(fun=base::mean, colour="black", geom="point",shape='square', size=2, show.legend=FALSE,
+  #            position = position_dodge2(width = 0.75, preserve = "single"))+ #show means#
+  facet_nested_wrap(~Subclass, dir = "v", strip.position = "top",
+                    axes = "all", remove_labels = "x", scales = 'free', nrow = 3)+  #split plots#
+  theme(strip.background = element_rect(colour = "black", fill = "white"))+
+  labs(x = 'log Area', y = 'Compound', fill = 'Compound')+
+  theme(axis.title.x = element_text(size = 20), axis.title.y = element_text(size = 20), axis.text.x = element_text(size = 20), axis.text.y = element_text(size = 15), legend.title = element_text(size = 20),
+        legend.text = element_text(size = 18),title = element_text(size = 15), strip.text = element_text(size = 25))+
+  #scale_fill_brewer(palette = 'Set2')+
+  force_panelsizes(rows = c(2,0.2,2))+
+  guides(fill="none", colour = 'none') #remove legend
+boxplot_endo_classes3
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/boxplot_endo_classes3.pdf", plot = boxplot_endo_classes3, base_width=18, base_height=27)
+
+boxplot_grid <- ggarrange(boxplot_exo_classes, boxplot_endo_classes, nrow = 2, labels = c('A', 'B'), font.label=list(color="black",size=35), align = c('v'))
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/boxplot_grid.svg", plot = boxplot_grid, base_width=20, base_height=30)
 
 #####number of features#####
 total_features <- CLEAN_MERGED_ALL_WITH_DUPS1_LOD_Corrected %>% nrow()
 mz1 <- mz1_all %>% nrow()
 
-test <- mz1_all %>% filter(!is.na(INCHIKEY) & !is.na(Metabolite_name) & !is.na(SMILES))%>%
-  filter(Metabolite_name != 'null' & Metabolite_name != 'Unknown') %>%
-  filter(INCHIKEY != 'null' & SMILES != 'null') %>%
+test <- mz1_all %>% filter(is.na(INCHIKEY) | is.na(Metabolite_name) | is.na(SMILES) | Metabolite_name == 'null' | 
+                             Metabolite_name == 'Unknown'| INCHIKEY == 'null' | SMILES == 'null') %>%
   nrow()
 
 difference1 = total_features-mz1
@@ -3938,11 +3640,67 @@ detection <- heatmap_features %>% nrow()
 CL_Classification_df_combinedwide2 <- CL_Classification_df_combinedwide %>%
   dplyr::rename(INCHIKEY = InChIKey)
 
+#upload classyfire data#
+Full_Classyfire <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/Classyfire_Feb17_Full.csv", col_types = cols(.default = "c"))
+names(Full_Classyfire) <- gsub(" ", "_", names(Full_Classyfire)) #replace spaces in column names with underscore#
+
+Venn_LC_CF_1 <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/classyfire_(1-419).csv", col_types = cols(.default = "c"))
+names(Venn_LC_CF_1) <- gsub(" ", "_", names(Venn_LC_CF_1)) #replace spaces in column names with underscore#
+
+Venn_LC_CF_2 <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/classyfire_427-573.csv", col_types = cols(.default = "c"))
+names(Venn_LC_CF_2) <- gsub(" ", "_", names(Venn_LC_CF_2)) #replace spaces in column names with underscore#
+
+Venn_LC_CF_3 <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/classyfire_574-850.csv", col_types = cols(.default = "c"))
+names(Venn_LC_CF_3) <- gsub(" ", "_", names(Venn_LC_CF_3)) #replace spaces in column names with underscore#
+
+Venn_LC_CF_4 <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/classyfire_851-1200.csv", col_types = cols(.default = "c"))
+names(Venn_LC_CF_4) <- gsub(" ", "_", names(Venn_LC_CF_4)) #replace spaces in column names with underscore#
+
+Venn_LC_CF_5 <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/classyfire_1201-1402.csv", col_types = cols(.default = "c"))
+names(Venn_LC_CF_5) <- gsub(" ", "_", names(Venn_LC_CF_5)) #replace spaces in column names with underscore#
+
+Venn_GC_Classyfire <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/Venn_Data_EI_ClassyFire.csv", col_types = cols(.default = "c"))
+names(Venn_GC_Classyfire) <- gsub(" ", "_", names(Venn_GC_Classyfire)) #replace spaces in column names with underscore#
+
+Classyfire_missed_venn2 <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/Classyfire_Missed_Venn2.csv", col_types = cols(.default = "c"))
+names(Classyfire_missed_venn2) <- gsub(" ", "_", names(Classyfire_missed_venn2)) #replace spaces in column names with underscore#
+
+Classyfire_missed_venn <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/Classyfire_Missed_Venn.csv", col_types = cols(.default = "c"))
+names(Classyfire_missed_venn) <- gsub(" ", "_", names(Classyfire_missed_venn)) #replace spaces in column names with underscore#
+
+Classyfire_missed_venn3 <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/Classyfire_Missed_Venn3.csv", col_types = cols(.default = "c"))
+names(Classyfire_missed_venn3) <- gsub(" ", "_", names(Classyfire_missed_venn3)) #replace spaces in column names with underscore#
+
+Classyfire_missed_venn5 <- read_csv("/Users/anyaguo/Documents/Research/Classyfire_full_missed_Feb28.csv", col_types = cols(.default = "c"))
+names(Classyfire_missed_venn5) <- gsub(" ", "_", names(Classyfire_missed_venn5)) #replace spaces in column names with underscore#
+
+Classyfire_missed_venn6 <- read_csv("/Users/anyaguo/Documents/Research/Classyfire_full_missed2_Feb28.csv", col_types = cols(.default = "c"))
+names(Classyfire_missed_venn6) <- gsub(" ", "_", names(Classyfire_missed_venn6)) #replace spaces in column names with underscore#
+
+
+Classyfire_missed_venn4 <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/venn_classyfire_Feb26_missed.csv", col_types = cols(.default = "c"))
+names(Classyfire_missed_venn4) <- gsub(" ", "_", names(Classyfire_missed_venn4)) #replace spaces in column names with underscore#
+#still missing one inchikey ending in -M that couldn't be classified#
+
+Classyfire_venn <- bind_rows(Venn_GC_Classyfire, Classyfire_missed_venn2, Classyfire_missed_venn6, Classyfire_missed_venn, Classyfire_missed_venn4, Classyfire_missed_venn3,Classyfire_missed_venn5, Venn_LC_CF_1, Venn_LC_CF_2, Venn_LC_CF_3, Venn_LC_CF_4, Venn_LC_CF_5, Full_Classyfire) %>%
+  dplyr::rename(INCHIKEY = InChIKey) %>%
+  group_by(INCHIKEY) %>%
+  slice(1) %>%#remove duplicate inchikeys
+  ungroup()
+
+test <- Classyfire_venn %>% group_by(INCHIKEY) %>% filter(n()>1) %>% nrow()
+
+#write.csv(missing_classification,"/Users/anyaguo/Documents/Research/missing_classification.csv") #export final data frame#
+#write.csv(MERGED_ALL_NO_DUPS_PER_METHOD_SUBSET_LOD_Corrected,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Physical-Chemical Properties/venn_data.csv", row.names=FALSE) #export final data frame#
 CL_Classification_df_combinedwide2 <- CL_Classification_df_combinedwide %>% dplyr::rename(INCHIKEY = InChIKey)
 
 Classyfire_merge_venn_missing <- merge(heatmap_features, CL_Classification_df_combinedwide2, by = c('INCHIKEY'), all = T)%>%
   filter(!is.na(Metabolite_name)) %>%
   filter(is.na(ClassyFy_Status))
+#write.csv(Classyfire_merge_venn_missing,"/Users/anyaguo/Documents/Research/Classyfire_merge_venn_missing_Feb28.csv", row.names=FALSE) #export final data frame#
+
+test <- merge(heatmap_features, MERGED_ALL_NO_DUPS_PER_METHOD_SUBSET_LOD_Corrected, by = c('Type'), all = T) %>% #sanity check should give 0
+  filter(is.na(Metabolite_name.x))
 
 Classyfire_merge_venn <- merge(heatmap_features, CL_Classification_df_combinedwide2, by = c('INCHIKEY'))%>%
   filter(!is.na(ClassyFy_Status)) %>%
@@ -3985,14 +3743,14 @@ Fold_change_new <-merge(Classyfire_merge_venn, fold_change_data2_labels, by = c(
                                         "Organic oxygen compounds (n = 124)",
                                         'Nucleosides, nucleotides, and analogues (n = 31)',
                                         "Organohalogen compounds (n = 21)"
-  ))) %>%
+                                         ))) %>%
   ggplot(aes(x = Average_Mz, y = Participant_Avg, colour = Type, shape = Type))+
   geom_point(size = 8, alpha = 0.5, stroke=2)+
   theme_classic()+
   scale_colour_manual(values = fills_combined2)+
   facet_nested_wrap(~Label, dir = "v", strip.position = "top",
                     axes = "all", remove_labels = "x", ncol = 2)+
-  labs(x = 'Average m/z', y = expression('Log'[10]*'Area, Creatinine Normalized'))+
+  labs(x = 'Average m/z', y = expression('Log'[10]*'Area'))+
   scale_shape_manual(values = c(6,16,15,17,18,6,7,8,9,10,11,12,13,14,2,21))+
   # scale_y_continuous(limits = c(0,0.001))+
   theme(plot.title = element_text(hjust = 0.5))+ #make plot title in center of plot#
@@ -4007,7 +3765,7 @@ Fold_change_new <-merge(Classyfire_merge_venn, fold_change_data2_labels, by = c(
 
 Fold_change_new
 
-save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Abundance.svg", plot = Fold_change_new, base_width=32, base_height=32)
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/Abundance.svg", plot = Fold_change_new, base_width=32, base_height=32)
 
 Scatterplot_Data <- merge(Classyfire_merge_venn, fold_change_data2_labels, by = c('Superclass')) %>%
   group_by(Superclass) %>%
@@ -4022,21 +3780,21 @@ Scatterplot_Data <- merge(Classyfire_merge_venn, fold_change_data2_labels, by = 
                                         'Nucleosides, nucleotides, and analogues (n = 31)',
                                         "Organohalogen compounds (n = 21)"
   )))
-write.csv(Scatterplot_Data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Scatterplot_Data.csv", row.names=FALSE) #export final data frame#
+#write.csv(Scatterplot_Data,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figure_Data_Sets/Scatterplot_Data.csv", row.names=FALSE) #export final data frame#
 
 ####heatmap volc grid#####
 
 volc.heatmap.grid <- ggarrange(ggarrange(plot_FC_all, plot_FC_all_filtered,
-                                         labels = c('A', 'B'), font.label = list(color = 'black', size = 35), nrow = 1),
+                               labels = c('A', 'B'), font.label = list(color = 'black', size = 35), nrow = 1),
                                ggarrange(volc, Participants_heatmap_norm100$gtable,
-                                         labels = c('C', 'D'), font.label=list(color="black",size=35)),
+                               labels = c('C', 'D'), font.label=list(color="black",size=35)),
                                ncol = 1, nrow = 2)
 volc.heatmap.grid
-save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/volc.heatmap.grid2.svg", plot = volc.heatmap.grid, base_width=22, base_height=20)
+#save_plot("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Figures_Feb27/volc.heatmap.grid2.svg", plot = volc.heatmap.grid, base_width=22, base_height=20)
 
 ###venn, fold diff grid####
 ven3_noleg <- ggVennDiagram(ven_list, stroke_size = 0.5, set_size = 8,
-                            label_size = 6, label_percent_digit = 2, label = 'percent')+
+                      label_size = 6, label_percent_digit = 2, label = 'percent')+
   #scale_fill_manual(values = c('#E41A1C', '#377EB8', '#4DAF4A', '#984EA3'))+
   #scale_fill_gradient(low = '#Fab000', high = '#619CFF', name = 'Count')+#
   scale_x_continuous(expand = expansion(mult = .2))+ #expand plot so titles aren't cut off#
@@ -4044,8 +3802,8 @@ ven3_noleg <- ggVennDiagram(ven_list, stroke_size = 0.5, set_size = 8,
   theme(
     legend.title = element_text(size = 20), legend.text = element_text(size = 18),
     title = element_text(size = 25), strip.text = element_text(size = 18), legend.position = 'non')# Customize theme
-#scale_fill_gradient(low = '#FFFFF0', high = '#619CFF', name = 'Count')+#
-#scale_fill_brewer(palette = 'Set1')
+  #scale_fill_gradient(low = '#FFFFF0', high = '#619CFF', name = 'Count')+#
+  #scale_fill_brewer(palette = 'Set1')
 ven3_noleg
 
 
@@ -4053,3 +3811,5 @@ ven3_noleg
 pubchem_database <- read_csv("/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Anya/Contact Lenses/PubChemLite_exposomics_20241227.csv", col_types = cols(.default = "c"))
 
 database_merge<- merge(heatmap_features, pubchem_database, by = c('SMILES'))
+#write_xlsx(database_merge,"/Users/anyaguo/Library/CloudStorage/OneDrive-McMasterUniversity/Results/Pubchem_Database_Merge.xlsx") #export final data frame#
+view(database_merge)
